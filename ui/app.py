@@ -4,6 +4,7 @@ from core.models import TimingInput, TimingResult
 from ui import theme
 from ui.screens.input_form import InputFormScreen
 from ui.screens.model_select import ModelSelectScreen
+from ui.screens.results import ResultsScreen
 
 WINDOW_WIDTH = 1120
 WINDOW_HEIGHT = 720
@@ -42,7 +43,7 @@ class FlowApp(ctk.CTk):
         self.screens: dict[str, ctk.CTkFrame] = {
             "model": ModelSelectScreen(self.content, self),
             "inputs": InputFormScreen(self.content, self),
-            "results": self._placeholder("Results: coming in Phase 5"),
+            "results": ResultsScreen(self.content, self),
         }
         self.show("model")
 
@@ -50,13 +51,6 @@ class FlowApp(ctk.CTk):
         x = (self.winfo_screenwidth() - WINDOW_WIDTH) // 2
         y = (self.winfo_screenheight() - WINDOW_HEIGHT) // 2
         self.geometry(f"{WINDOW_WIDTH}x{WINDOW_HEIGHT}+{max(x, 0)}+{max(y, 0)}")
-
-    def _placeholder(self, text: str) -> ctk.CTkFrame:
-        frame = ctk.CTkFrame(self.content, fg_color="transparent")
-        ctk.CTkLabel(
-            frame, text=text, font=theme.font(18, serif=True), text_color=theme.color("text_muted"),
-        ).place(relx=0.5, rely=0.5, anchor="center")
-        return frame
 
     def _build_sidebar(self) -> None:
         sidebar = ctk.CTkFrame(

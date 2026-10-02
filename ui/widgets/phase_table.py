@@ -46,7 +46,7 @@ class PhaseTable(ctk.CTkFrame):
 
     def _row(self, row: int, cells, shade: str, bold: bool = False, phase=None, dot: str | None = None) -> None:
         for column, text in enumerate(cells):
-            holder = ctk.CTkFrame(self, corner_radius=0, height=34, fg_color=theme.color(shade))
+            holder = ctk.CTkFrame(self, corner_radius=0, width=1, height=34, fg_color=theme.color(shade))
             holder.grid(row=row, column=column, sticky="nsew")
             holder.grid_propagate(False)
             holder.columnconfigure(1 if column == 0 else 0, weight=1)
