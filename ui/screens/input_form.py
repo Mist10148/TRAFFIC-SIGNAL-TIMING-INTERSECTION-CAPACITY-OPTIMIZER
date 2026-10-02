@@ -1,7 +1,8 @@
 import customtkinter as ctk
 
+from core.calculator import compute_timing
 from core.models import MODELS
-from core.validation import parse_number
+from core.validation import parse_number, validate_inputs
 from ui import theme
 from ui.widgets.banner import Banner
 from ui.widgets.labeled_entry import LabeledEntry
@@ -39,6 +40,8 @@ class InputFormScreen(ctk.CTkFrame):
         self._build_header()
         self._build_body()
         self._build_footer()
+        for key in GLOBAL_KEYS:
+            self._wire_entry(self.entries[key])
         self.bind("<Configure>", self._on_resize)
 
     def _build_header(self) -> None:
@@ -119,6 +122,12 @@ class InputFormScreen(ctk.CTkFrame):
         self.buttons = ctk.CTkFrame(footer, fg_color="transparent")
         self.buttons.grid(row=3, column=0, sticky="ew", padx=theme.PAD_M, pady=theme.PAD_M)
         ctk.CTkButton(
+            self.buttons, text="Calculate", width=130, height=36, font=theme.font(13, "bold"),
+            corner_radius=theme.RADIUS_INPUT, fg_color=theme.color("accent"),
+            hover_color=theme.color("accent_hover"), text_color=theme.color("on_accent"),
+            command=self._on_calculate,
+        ).pack(side="right")
+        ctk.CTkButton(
             self.buttons, text="Reset", width=90, height=36, font=theme.font(13),
             corner_radius=theme.RADIUS_INPUT, fg_color="transparent", border_width=1,
             border_color=theme.color("border"), hover_color=theme.color("surface_alt"),
@@ -151,10 +160,12 @@ class InputFormScreen(ctk.CTkFrame):
             row, column = divmod(index, 2)
             entry.grid(row=row, column=column, sticky="ew", padx=theme.PAD_S, pady=(0, theme.PAD_M))
             self.entries[phase.code] = entry
-
-        for entry in self.entries.values():
-            entry.bind_change(self._on_change)
+            self._wire_entry(entry)
         self.built_for = model_key
+
+    def _wire_entry(self, entry: LabeledEntry) -> None:
+        entry.bind_change(self._on_change)
+        entry.bind_enter(self._on_calculate)
 
     def _restore_values(self) -> None:
         # Global values survive a model switch; keys that no longer exist are simply dropped.
@@ -235,3 +246,58 @@ class InputFormScreen(ctk.CTkFrame):
             self.entries[phase.code].set(example.get(phase.code, "0"))
         self._clear_feedback()
         self._on_change()
+
+    # Calculate and the two retry loops
+
+    def _on_calculate(self) -> None:
+        self._clear_feedback()
+        try:
+            self._calculate()
+        except (ValueError, ZeroDivisionError):
+            # Safety net only. Validation should already have caught anything odd.
+            self._show_error("Unexpected input problem. Check the values and try again.")
+
+    def _calculate(self) -> None:
+        raw = {key: entry.get() for key, entry in self.entries.items()}
+        timing_input, errors = validate_inputs(self.app.model_key, raw)
+
+        if errors:
+            self._show_field_errors(errors)
+            return
+
+        result = compute_timing(timing_input)
+        if result.oversaturated:
+            self._show_oversaturation(result)
+            return
+
+        self.app.timing_input = timing_input
+        self.app.result = result
+        self.app.show("results")
+
+    def _show_field_errors(self, errors) -> None:
+        # Nothing is cleared here: the user keeps everything they typed and just fixes the marked fields.
+        volume_keys = [k for k in self.entries if k not in GLOBAL_KEYS]
+        for error in errors:
+            targets = volume_keys if error.field == "volumes" else [error.field]
+            for key in targets:
+                self.entries[key].set_error(error.message)
+
+        marked = {key for error in errors for key in (volume_keys if error.field == "volumes" else [error.field])}
+        first = next(key for key in self.entries if key in marked)
+        self.entries[first].focus()
+        self._show_error(f"Please fix {len(errors)} field(s) to continue.")
+
+    def _show_oversaturation(self, result) -> None:
+        busiest = sorted(result.phases, key=lambda p: p.flow_ratio, reverse=True)[:2]
+        names = ", ".join(f"{p.code} ({p.flow_ratio:.3f})" for p in busiest)
+        self._show_error(
+            f"{result.message} Largest demand: {names}. "
+            "Reduce volumes or add capacity, then try again."
+        )
+        self.meter.set(result.total_flow_ratio)
+        for phase in busiest:
+            self.entries[phase.code].set_highlight()
+
+    def _show_error(self, text: str) -> None:
+        self.banner.set("error", text)
+        self.banner.show()
