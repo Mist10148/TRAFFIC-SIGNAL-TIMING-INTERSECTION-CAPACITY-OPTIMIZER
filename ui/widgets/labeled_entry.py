@@ -45,8 +45,9 @@ class LabeledEntry(ctk.CTkFrame):
         # Wrap against the whole field width, not the label itself, to avoid a resize loop.
         self.bind("<Configure>", lambda e: self.note.configure(wraplength=max(e.width - 8, 80)))
 
-        self.entry.bind("<FocusIn>", self._select_all)
-        self.entry.bind("<FocusOut>", self._trim)
+        self.status = "normal"
+        self.entry.bind("<FocusIn>", self._on_focus_in)
+        self.entry.bind("<FocusOut>", self._on_focus_out)
         self.entry.bind("<KeyRelease>", self._check_shape, add="+")
 
     def get(self) -> str:
@@ -66,21 +67,38 @@ class LabeledEntry(ctk.CTkFrame):
         self.entry.bind("<Return>", lambda _: callback())
 
     def set_error(self, message: str) -> None:
-        self.entry.configure(border_color=theme.color("signal_red"))
+        self.status = "error"
+        self._paint_border(focused=False)
         self.note.configure(text=message, text_color=theme.color("signal_red"))
 
     def set_highlight(self) -> None:
         # A softer amber outline: "this one is part of the problem", not "this is invalid".
-        self.entry.configure(border_color=theme.color("signal_amber"))
+        self.status = "highlight"
+        self._paint_border(focused=False)
 
     def clear_error(self) -> None:
-        self.entry.configure(border_color=theme.color("border"))
+        self.status = "normal"
+        self._paint_border(focused=False)
         self.note.configure(text=self.hint, text_color=theme.color("text_muted"))
 
-    def _select_all(self, _event) -> None:
-        self.entry.select_range(0, "end")
+    def _paint_border(self, focused: bool) -> None:
+        # Errors keep their color while focused, so the focus ring never hides a problem.
+        colors = {"error": "signal_red", "highlight": "signal_amber"}
+        if self.status in colors:
+            token = colors[self.status]
+        else:
+            token = "accent" if focused else "border"
+        self.entry.configure(border_color=theme.color(token), border_width=2 if focused else 1)
 
-    def _trim(self, _event) -> None:
+    def _on_focus_in(self, _event) -> None:
+        self.entry.select_range(0, "end")
+        self._paint_border(focused=True)
+
+    def _on_focus_out(self, _event) -> None:
+        self._paint_border(focused=False)
+        self._trim()
+
+    def _trim(self) -> None:
         text = self.entry.get()
         # Only trim stray spaces; never rewrite what the user typed.
         if parse_number(text) is not None and text != text.strip():
@@ -89,6 +107,8 @@ class LabeledEntry(ctk.CTkFrame):
     def _check_shape(self, _event) -> None:
         # Editing means they're fixing it, so drop the old message first.
         self.clear_error()
+        self._paint_border(focused=True)
         text = self.entry.get().strip()
         if not NUMBER_SHAPE.match(text):
             self.set_error("Numbers only")
+            self._paint_border(focused=True)

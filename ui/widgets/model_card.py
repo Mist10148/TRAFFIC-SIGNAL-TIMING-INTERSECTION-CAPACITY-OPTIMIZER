@@ -58,6 +58,8 @@ class ModelCard(ctk.CTkFrame):
             widget.bind("<Button-1>", self._select)
             widget.bind("<Enter>", self._on_enter)
             widget.bind("<Leave>", self._on_leave)
+            # A hand cursor tells people the whole card can be clicked.
+            widget.configure(cursor="hand2")
 
         # Make the card reachable with Tab, and selectable with Enter or Space.
         tk.Frame.configure(self, takefocus=True)

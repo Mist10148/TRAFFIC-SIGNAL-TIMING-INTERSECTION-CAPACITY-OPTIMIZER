@@ -1,3 +1,6 @@
+import tkinter as tk
+from pathlib import Path
+
 import customtkinter as ctk
 
 from core.models import TimingInput, TimingResult
@@ -10,6 +13,7 @@ WINDOW_WIDTH = 1120
 WINDOW_HEIGHT = 720
 SIDEBAR_WIDTH = 220
 NAV_HEIGHT = 36
+ICON_PATH = str(Path(__file__).resolve().parent.parent / "assets" / "flow.ico")
 
 
 class FlowApp(ctk.CTk):
@@ -22,6 +26,8 @@ class FlowApp(ctk.CTk):
         self.title("FLOW | Traffic Signal Timing Optimizer")
         self.minsize(960, 640)
         self._center_window()
+        # CustomTkinter sets its own icon a moment after startup, so ours goes in after that.
+        self.after(250, self._set_icon)
 
         # State shared by every screen.
         self.model_key: str | None = None
@@ -46,6 +52,13 @@ class FlowApp(ctk.CTk):
             "results": ResultsScreen(self.content, self),
         }
         self.show("model")
+
+    def _set_icon(self) -> None:
+        try:
+            self.iconbitmap(ICON_PATH)
+        except tk.TclError:
+            # A missing icon is not worth stopping the app for.
+            pass
 
     def _center_window(self) -> None:
         x = (self.winfo_screenwidth() - WINDOW_WIDTH) // 2
