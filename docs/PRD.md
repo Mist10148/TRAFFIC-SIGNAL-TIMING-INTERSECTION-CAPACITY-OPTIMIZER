@@ -165,7 +165,7 @@ The original proposal flowchart has no loop. The retry loops above are the requi
 - Light and dark themes (follows the system). Tokens live in one place (`ui/theme.py`).
 - Typography: a clean sans-serif UI font (Segoe UI Variable / Segoe UI fallback) and a monospace font (Cascadia Mono / Consolas fallback) for the text timeline and numeric readouts.
 
-Color tokens, fonts and spacing are defined in [DESIGN.md](../DESIGN.md): a warm, Claude-inspired palette with a clay accent.
+Color tokens, fonts and spacing live in `ui/theme.py`: a warm, Claude-inspired palette with a clay accent.
 
 ### 10.2 Screens
 1. **Model Select**: five cards (2, 3, 4, 6, 8 phase), each with a name, a one-line description and a tiny phase diagram icon drawn on a canvas.
