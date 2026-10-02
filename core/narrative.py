@@ -1,4 +1,4 @@
-from core.models import PRACTICAL_CYCLE_LIMIT, TimingResult
+from core.models import TimingResult
 
 # Total flow ratio above this leaves little spare capacity for a fixed-time plan.
 NEAR_CAPACITY_Y = 0.85
@@ -24,7 +24,7 @@ def _description(result: TimingResult, saturation_flow: float, lost_time: float)
     codes = [p.code for p in result.phases]
     skipped = len(result.model.phases) - result.active_count
     text = (
-        f"This is a {result.model.name} signal ({result.model.description.lower()}) "
+        f"This is a {result.model.name} signal ({result.model.description}) "
         f"timed with Webster's method. It runs {result.active_count} active phases "
         f"({_join(codes)}), each with {lost_time:g} s of lost time (amber plus all-red) "
         f"and a saturation flow of {saturation_flow:g} veh/hr/lane."
@@ -67,11 +67,6 @@ def _discussion(result: TimingResult) -> str:
         f"({critical.flow_ratio:.4f}), so it receives the longest green "
         f"({critical.green} s, {critical.green_share:.0%} of the effective green).",
     ]
-    if result.cycle > PRACTICAL_CYCLE_LIMIT:
-        parts.append(
-            f"The {result.cycle} s cycle is longer than the usual practical limit of "
-            f"{PRACTICAL_CYCLE_LIMIT} s, which means long waits for every approach."
-        )
     for warning in result.warnings:
         parts.append(f"Note: {warning}")
     return " ".join(parts)
