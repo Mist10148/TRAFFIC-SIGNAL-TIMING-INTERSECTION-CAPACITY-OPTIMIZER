@@ -2,6 +2,7 @@ import customtkinter as ctk
 
 from core.models import TimingInput, TimingResult
 from ui import theme
+from ui.screens.input_form import InputFormScreen
 from ui.screens.model_select import ModelSelectScreen
 
 WINDOW_WIDTH = 1120
@@ -40,7 +41,7 @@ class FlowApp(ctk.CTk):
 
         self.screens: dict[str, ctk.CTkFrame] = {
             "model": ModelSelectScreen(self.content, self),
-            "inputs": self._placeholder("Inputs: coming in Phase 4"),
+            "inputs": InputFormScreen(self.content, self),
             "results": self._placeholder("Results: coming in Phase 5"),
         }
         self.show("model")
@@ -126,7 +127,7 @@ class FlowApp(ctk.CTk):
         screen.grid(row=0, column=0, sticky="nsew")
         if hasattr(screen, "on_show"):
             screen.on_show()
-        self._update_nav()
+        self.update_nav()
 
     def reset(self) -> None:
         self.model_key = None
@@ -135,7 +136,7 @@ class FlowApp(ctk.CTk):
         self.timing_input = None
         self.show("model")
 
-    def _update_nav(self) -> None:
+    def update_nav(self) -> None:
         # Inputs need a chosen model; Results need a finished calculation.
         enabled = {
             "model": True,

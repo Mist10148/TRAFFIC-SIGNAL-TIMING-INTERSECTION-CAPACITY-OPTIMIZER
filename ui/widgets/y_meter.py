@@ -29,14 +29,14 @@ class YMeter(ctk.CTkFrame):
         self.fill = ctk.CTkFrame(self.track, corner_radius=TRACK_HEIGHT // 2)
 
         # A small tick where the intersection starts to get heavy.
-        marks = ctk.CTkFrame(self, fg_color="transparent", height=18)
+        marks = ctk.CTkFrame(self, fg_color="transparent", height=24)
         marks.grid(row=2, column=0, columnspan=2, sticky="ew")
         ctk.CTkFrame(
             marks, width=2, height=6, corner_radius=0, fg_color=theme.color("text_muted"),
         ).place(relx=HEAVY_MARK, y=0, anchor="n")
         ctk.CTkLabel(
-            marks, text="heavy", font=theme.font(10), text_color=theme.color("text_muted"),
-        ).place(relx=HEAVY_MARK, y=6, anchor="n")
+            marks, text="heavy", height=16, font=theme.font(10), text_color=theme.color("text_muted"),
+        ).place(relx=HEAVY_MARK, y=8, anchor="n")
 
         self.set_error()
 
