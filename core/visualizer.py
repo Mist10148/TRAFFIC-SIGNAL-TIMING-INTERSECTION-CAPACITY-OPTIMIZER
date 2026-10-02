@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 from core.models import TimingResult
+from core.narrative import build_narrative, render_narrative
 
 
 @dataclass(frozen=True)
@@ -63,27 +64,6 @@ def _check_row(code: str, segments: tuple[Segment, ...], cycle: int) -> None:
         raise AssertionError(f"Phase {code} adds up to {expected_start} s, not {cycle} s")
 
 
-def _block(segment: Segment) -> str:
-    if segment.kind == "G":
-        return f"[=== G ({segment.duration}s) ===]"
-    if segment.kind == "YR":
-        return f"[Y/R: {segment.duration}s]"
-    return f"[----- R ({segment.duration}s) -----]"
-
-
-# The spec's sample output pads labels to 10 characters, so that's the minimum.
-MIN_LABEL_WIDTH = 10
-
-
-def render_text(timeline: Timeline) -> str:
-    lines = [f"--- VISUAL PHASE DIAGRAM ({timeline.cycle}-Second Cycle) ---"]
-    width = max(MIN_LABEL_WIDTH, max(len(row.code) for row in timeline.rows) + 1)
-    for row in timeline.rows:
-        blocks = "".join(_block(s) for s in row.segments)
-        lines.append(f"{row.code:<{width}}: {blocks}")
-    return "\n".join(lines)
-
-
 def _inputs_section(result: TimingResult, saturation_flow: float, lost_time: float) -> list[str]:
     lines = [
         "INPUTS",
@@ -117,9 +97,7 @@ def _output_section(result: TimingResult) -> list[str]:
     return lines
 
 
-def render_report(
-    result: TimingResult, timeline: Timeline, saturation_flow: float, lost_time: float
-) -> str:
+def render_report(result: TimingResult, saturation_flow: float, lost_time: float) -> str:
     sections = [
         _inputs_section(result, saturation_flow, lost_time),
         _variables_section(result),
@@ -127,8 +105,9 @@ def render_report(
     ]
     if result.warnings:
         sections.append(["WARNINGS"] + [f"- {w}" for w in result.warnings])
-    sections.append([render_text(timeline)])
-    return "\n\n".join("\n".join(lines) for lines in sections)
+    text = "\n\n".join("\n".join(lines) for lines in sections)
+    narrative = render_narrative(build_narrative(result, saturation_flow, lost_time))
+    return f"{text}\n\n{narrative}"
 
 
 def scale_segments(row: TimelineRow, pixel_width: int, cycle: int) -> list[tuple[str, int, int]]:
