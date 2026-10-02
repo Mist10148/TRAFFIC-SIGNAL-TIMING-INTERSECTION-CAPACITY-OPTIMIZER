@@ -97,13 +97,15 @@ Work through this list and tick each item:
 ---
 
 ## Checklist
+Note: the automated tests were removed from this project at the owner's request, so 6.2 to 6.4 and the coverage and test items below were skipped. The edge cases and QA were checked with throwaway scripts instead; see [QA.md](../QA.md), which also lists what has not been run yet.
+
 - [ ] `core/` coverage is 90 percent or more
 - [ ] Pipeline and invariant tests pass
 - [ ] Edge-case matrix passes in tests and by hand
-- [ ] `docs/QA.md` filled with results
+- [x] `docs/QA.md` filled with results
 - [ ] Polish list 6.7 complete
-- [ ] Hygiene searches in 6.9 clean
-- [ ] Screenshots added to README
+- [x] Hygiene searches in 6.9 clean
+- [x] Screenshots added to README
 - [ ] No known crashes
 
 ## Definition of done
