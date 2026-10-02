@@ -56,6 +56,13 @@ def color(name: str) -> tuple[str, str]:
     return (LIGHT[name], DARK[name])
 
 
+def resolve(name: str) -> str:
+    # Plain tk widgets (like Canvas) can't take a (light, dark) pair,
+    # so they ask for the hex of whichever mode is on screen right now.
+    tokens = DARK if ctk.get_appearance_mode() == "Dark" else LIGHT
+    return tokens[name]
+
+
 @lru_cache(maxsize=1)
 def _installed_families() -> frozenset[str]:
     return frozenset(tkfont.families())
