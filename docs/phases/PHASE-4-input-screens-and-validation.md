@@ -99,16 +99,16 @@ Implement `on_calculate()`:
 ---
 
 ## Checklist
-- [ ] Global inputs plus per-model volumes render for all five models
-- [ ] Global values survive model change; volumes rebuild per model
-- [ ] Every validation message from Phase 1 appears next to the right field
-- [ ] Invalid input never clears the form (retry loop 1)
-- [ ] Oversaturation keeps the user on the form with values intact (retry loop 2)
-- [ ] Live Y meter updates and changes color by threshold
+- [x] Global inputs plus per-model volumes render for all five models
+- [x] Global values survive model change; volumes rebuild per model
+- [x] Every validation message from Phase 1 appears next to the right field
+- [x] Invalid input never clears the form (retry loop 1)
+- [x] Oversaturation keeps the user on the form with values intact (retry loop 2)
+- [x] Live Y meter updates and changes color by threshold
 - [ ] Enter key submits; Tab order is sensible
-- [ ] Fill example, Reset and Change model work
+- [x] Fill example, Reset and Change model work
 - [ ] All items in 4.10 pass
-- [ ] Single-line comments only; no color hex outside `theme.py`
+- [x] Single-line comments only; no color hex outside `theme.py`
 
 ## Definition of done
 A user can enter data for any model, see precise errors, correct them and reach the results screen without the app ever crashing or discarding their input.
