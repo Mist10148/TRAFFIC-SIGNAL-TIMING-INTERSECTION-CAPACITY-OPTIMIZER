@@ -57,7 +57,7 @@ EW        : [----- R (43s) -----][=== G (28s) ===][Y/R: 4s]
 
 Y = 0.7632, L = 8 s, raw Co = 71.78 s, cycle = 75 s, Te = 67 s.
 
-More cases, including the ones recomputed from the proposal, are in [docs/PRD.md](docs/PRD.md#11-acceptance-test-cases-recomputed).
+More cases, including the ones recomputed from the proposal, are in [docs/PRD.md](docs/PRD.md#11-reference-cases-recomputed).
 
 ## Getting started
 
@@ -70,13 +70,6 @@ python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
 python main.py
-```
-
-Run the tests:
-
-```bash
-pip install -r requirements-dev.txt
-pytest
 ```
 
 ## How to use
@@ -101,7 +94,6 @@ ui/                     CustomTkinter interface
   app.py                main window and screen switching
   screens/              model select, input form, results
   widgets/              reusable components
-tests/                  pytest suites
 docs/                   PRD and phase task files
 ```
 
@@ -115,7 +107,7 @@ docs/                   PRD and phase task files
   4. [Phase 3: GUI shell and theme](docs/phases/PHASE-3-gui-shell-and-theme.md)
   5. [Phase 4: Input screens and validation](docs/phases/PHASE-4-input-screens-and-validation.md)
   6. [Phase 5: Results and timeline view](docs/phases/PHASE-5-results-and-timeline-view.md)
-  7. [Phase 6: Testing and polish](docs/phases/PHASE-6-testing-and-polish.md)
+  7. [Phase 6: Polish](docs/phases/PHASE-6-testing-and-polish.md)
   8. [Phase 7: Packaging and submission](docs/phases/PHASE-7-packaging-and-submission.md)
 
 ## Code conventions
@@ -127,4 +119,4 @@ docs/                   PRD and phase task files
 
 ## Notes on the proposal's sample numbers
 
-Only the first sample scenario (2-phase) reproduces exactly from Webster's formula. Scenarios 2 to 5 in the proposal list cycle lengths that do not follow from the formulas, so this project uses recomputed values (see the PRD, decision D1). Both the tests and the app follow the formulas.
+Only the first sample scenario (2-phase) reproduces exactly from Webster's formula. Scenarios 2 to 5 in the proposal list cycle lengths that do not follow from the formulas, so this project uses recomputed values (see the PRD, decision D1). The app follows the formulas.

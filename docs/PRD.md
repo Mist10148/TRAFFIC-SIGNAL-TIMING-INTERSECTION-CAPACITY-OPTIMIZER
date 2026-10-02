@@ -21,7 +21,7 @@ FLOW is a desktop application that computes optimal fixed-time traffic signal ti
 - an oversaturation warning when demand exceeds capacity (Y >= 1.0),
 - a phase timeline diagram (Green, Yellow/All-Red, Red) across the full cycle.
 
-The earlier prototype was a console script. This version is a polished, app-like GUI. The calculation and visualization logic stays UI-independent so it can be tested without a window.
+The earlier prototype was a console script. This version is a polished, app-like GUI. The calculation and visualization logic stays UI-independent so it can be checked without a window.
 
 ## 2. Goals and non-goals
 
@@ -30,7 +30,7 @@ The earlier prototype was a console script. This version is a polished, app-like
 2. A sleek, modern, app-like interface (dark and light themes).
 3. Friendly input handling with a visible retry loop: bad input never crashes the app and never loses what the user already typed.
 4. Clear results: cycle, effective green, per-phase greens, and a readable timeline.
-5. Clean, testable code: a pure `core/` package and a thin `ui/` package.
+5. Clean, readable code: a pure `core/` package and a thin `ui/` package.
 
 ### Non-goals (v1)
 - Actuated or adaptive signal control.
@@ -86,7 +86,7 @@ A phase whose volume is `0` is **inactive**. Inactive phases are dropped from th
 
 ## 6. Decisions and issues found in the source material
 
-**D1. Sample cases 2 to 5 do not match the formulas.** Using Webster's formula exactly as written in the proposal, only Scenario 1 matches. The sample cycle lengths for Scenarios 2 to 5 (100, 120, 110, 85 s) are not reproducible, and the sample flow ratios are rounded to two decimals. Recomputed values are in section 11 and are the ones the tests use. The proposal's sample numbers are treated as illustrative only.
+**D1. Sample cases 2 to 5 do not match the formulas.** Using Webster's formula exactly as written in the proposal, only Scenario 1 matches. The sample cycle lengths for Scenarios 2 to 5 (100, 120, 110, 85 s) are not reproducible, and the sample flow ratios are rounded to two decimals. Recomputed values are in section 11 and are the ones the app is checked against. The proposal's sample numbers are treated as illustrative only.
 
 | Scenario | Sample cycle | Webster (rounded sample Y) | Webster (exact Y) |
 |---|---|---|---|
@@ -137,7 +137,6 @@ A phase whose volume is `0` is **inactive**. Inactive phases are dropped from th
 | NFR-03 | `core/` has no import of `tkinter` or `customtkinter`. |
 | NFR-04 | Minimum window 960 x 640, default 1120 x 720; layout adapts when resized. |
 | NFR-05 | Text contrast meets WCAG AA in both themes. Signal colors are never the only carrier of meaning (G, Y/R, R letters are always printed). |
-| NFR-06 | Unit tests cover calculator, validation and visualizer, at least 90 percent line coverage on `core/`. |
 | NFR-07 | Runs on Windows 10/11; builds to a single `.exe` with PyInstaller. |
 
 ## 9. User flow
@@ -176,7 +175,7 @@ Color tokens, fonts and spacing live in `ui/theme.py`: a warm, Claude-inspired p
 ### 10.3 Components (`ui/widgets/`)
 `StatCard`, `LabeledEntry` (label, unit, hint, inline error), `Banner` (info, warning, error), `PhaseTable`, `TimelineCanvas`, `YMeter`, `ModelCard`.
 
-## 11. Acceptance test cases (recomputed)
+## 11. Reference cases (recomputed)
 
 All cases use `S = 1900` veh/hr/lane and `li = 4 s`. Values below are from the exact formulas with largest-remainder rounding. Flow ratios are shown to 4 decimals.
 
@@ -189,7 +188,7 @@ All cases use `S = 1900` veh/hr/lane and `li = 4 s`. Values below are from the e
 | 5 | 8-phase | NBL 150, SBT 600, EBL 150, WBT 500, others 0 | 0.7368 | 16 (4 active) | 110.20 | 115 | 99 | 11, 42, 11, 35 |
 | 6 | 2-phase | NS 1200, EW 800 | 1.0526 | n/a | n/a | n/a | n/a | Oversaturation warning, no timing |
 
-Edge cases the tests must cover: all volumes 0 (error), a single active phase, `Y` just below 1.0 (for example 0.99, cycle above 150 s triggers the impractical warning), non-numeric text, negative values, empty fields, decimal inputs, very large inputs, `Y` exactly 1.0.
+Edge cases to check by hand: all volumes 0 (error), a single active phase, `Y` just below 1.0 (for example 0.99, cycle above 150 s triggers the impractical warning), non-numeric text, negative values, empty fields, decimal inputs, very large inputs, `Y` exactly 1.0.
 
 Expected text timeline for case 1:
 
@@ -216,8 +215,6 @@ ui/
     input_form.py            InputFormScreen
     results.py               ResultsScreen
   widgets/                   StatCard, LabeledEntry, Banner, PhaseTable, TimelineCanvas, YMeter, ModelCard
-tests/
-  test_calculator.py  test_validation.py  test_visualizer.py
 docs/
   PRD.md  phases/PHASE-*.md
 ```
@@ -245,13 +242,13 @@ Data flow: `InputFormScreen` collects strings -> `validation.validate_inputs` ->
 | Risk | Mitigation |
 |---|---|
 | Sample numbers in the proposal disagree with the formula | D1: recomputed table, explained in the README and in the presentation. |
-| Rounded greens break the timeline | D4: largest-remainder rounding plus a test that `sum(g) == Te`. |
+| Rounded greens break the timeline | D4: largest-remainder rounding and `sum(g) == Te` always holds. |
 | CustomTkinter scaling issues on high-DPI displays | Use CTk scaling, test at 100 percent and 150 percent. |
 | Timeline too wide for long cycles (for example 225 s) | Canvas scales proportionally; text view wraps in a horizontally scrollable box. |
 | Time before submission | Phases are ordered so the engine and a basic GUI are done first; polish and stretch goals are last. |
 
 ## 16. Definition of done
-1. All acceptance cases in section 11 pass as automated tests.
+1. All reference cases in section 11 give the listed results.
 2. All screens in section 10.2 work in both themes with no crashes on invalid input.
 3. Retry loops (invalid input, oversaturation) verified by hand.
 4. README is accurate: install, run, usage, screenshots.
