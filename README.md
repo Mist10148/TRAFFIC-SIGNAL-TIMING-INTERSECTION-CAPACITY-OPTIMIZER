@@ -15,7 +15,8 @@ A Python desktop app (CustomTkinter) that calculates optimal fixed-time signal t
 - Five phase models: 2-Phase, 3-Phase, 4-Phase, 6-Phase and 8-Phase
 - Webster's method: flow ratios, total lost time, optimal cycle, effective green, green allocation
 - Oversaturation warning when total flow ratio `Y >= 1.0`
-- Phase timeline showing Green, Yellow/All-Red and Red for every phase across the cycle (graphical and text)
+- Phase timeline showing Green, Yellow/All-Red and Red for every phase across the cycle
+- Written Summary, Description, Results and Discussion sections that explain the answer in plain language
 - Input validation with inline errors and a retry loop, so mistakes never crash the app or wipe your inputs
 - Dark and light themes, app-style sidebar layout
 - One-click copy of the full results
@@ -49,13 +50,7 @@ A phase with a volume of `0` is treated as inactive and left out of the cycle.
 
 Input: 2-Phase, saturation flow 1900 veh/hr/lane, lost time 4 s, NS 850 veh/hr, EW 600 veh/hr.
 
-```
---- VISUAL PHASE DIAGRAM (75-Second Cycle) ---
-NS        : [=== G (39s) ===][Y/R: 4s][----- R (32s) -----]
-EW        : [----- R (43s) -----][=== G (28s) ===][Y/R: 4s]
-```
-
-Y = 0.7632, L = 8 s, raw Co = 71.78 s, cycle = 75 s, Te = 67 s.
+Y = 0.7632, L = 8 s, raw Co = 71.78 s, cycle = 75 s, Te = 67 s (NS 39 s green, EW 28 s green).
 
 More cases, including the ones recomputed from the proposal, are in [docs/PRD.md](docs/PRD.md#11-reference-cases-recomputed).
 
@@ -86,7 +81,7 @@ Results:
 
 ![Results](docs/images/results.png)
 
-Phase timeline, text diagram and formulas:
+Phase timeline, written summary and formulas:
 
 ![Timeline](docs/images/timeline.png)
 
@@ -110,7 +105,8 @@ core/                   pure calculation logic, no GUI imports
   models.py             phase model definitions and result dataclasses
   validation.py         input parsing and validation
   calculator.py         Webster's method
-  visualizer.py         timeline data and text diagram
+  narrative.py          summary, description, results and discussion text
+  visualizer.py         timeline data and copied report
 ui/                     CustomTkinter interface
   theme.py              colors, fonts, spacing
   app.py                main window and screen switching

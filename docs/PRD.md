@@ -190,13 +190,7 @@ All cases use `S = 1900` veh/hr/lane and `li = 4 s`. Values below are from the e
 
 Edge cases to check by hand: all volumes 0 (error), a single active phase, `Y` just below 1.0 (for example 0.99, cycle above 150 s triggers the impractical warning), non-numeric text, negative values, empty fields, decimal inputs, very large inputs, `Y` exactly 1.0.
 
-Expected text timeline for case 1:
-
-```
---- VISUAL PHASE DIAGRAM (75-Second Cycle) ---
-NS        : [=== G (39s) ===][Y/R: 4s][----- R (32s) -----]
-EW        : [----- R (43s) -----][=== G (28s) ===][Y/R: 4s]
-```
+Expected timeline for case 1: NS green 39 s, Y/R 4 s, red 32 s; EW red 43 s, green 28 s, Y/R 4 s (cycle 75 s).
 
 ## 12. Architecture
 
@@ -206,7 +200,8 @@ core/
   models.py                  PhaseDef, PhaseModel, MODELS registry, TimingInput, PhaseResult, TimingResult
   validation.py              parse_number, validate_inputs -> list[FieldError]
   calculator.py              flow_ratio, total_lost_time, webster_cycle, round_cycle, apportion_greens, compute_timing
-  visualizer.py              build_timeline -> list[TimelineRow], render_text -> str
+  narrative.py               build_narrative -> Summary / Description / Results / Discussion text
+  visualizer.py              build_timeline -> list[TimelineRow], render_report -> str
 ui/
   theme.py                   color tokens, fonts, spacing, apply_theme
   app.py                     FlowApp (CTk), screen switching, shared state
@@ -219,7 +214,7 @@ docs/
   PRD.md  phases/PHASE-*.md
 ```
 
-Data flow: `InputFormScreen` collects strings -> `validation.validate_inputs` -> `calculator.compute_timing` -> `TimingResult` -> `ResultsScreen`, which calls `visualizer.build_timeline` / `render_text`. `core/` only exchanges plain dataclasses and strings.
+Data flow: `InputFormScreen` collects strings -> `validation.validate_inputs` -> `calculator.compute_timing` -> `TimingResult` -> `ResultsScreen`, which calls `visualizer.build_timeline` / `narrative.build_narrative`. `core/` only exchanges plain dataclasses and strings.
 
 ## 13. Stretch goals (only after all phases are done)
 - Lanes-per-phase input (`Si = S x lanes`).
