@@ -56,15 +56,55 @@ More cases, including the ones recomputed from the proposal, are in [docs/PRD.md
 
 ## Getting started
 
-Requirements: Python 3.11+ on Windows 10/11.
+### What you need
+
+- Windows 10 or 11
+- Python 3.11 or newer, with `pip` and `venv` (Tkinter is included with the standard python.org installer; keep "tcl/tk and IDLE" ticked when installing)
+- Git, to clone the repository (or download the ZIP from GitHub instead)
+- One Python package, installed from `requirements.txt`: `customtkinter` 5.2.2 or newer
+- No internet connection is needed once the packages are installed, and no database or API keys
+
+Check your Python version with `python --version`.
+
+### How to run it
+
+1. Clone the repository and open it in a terminal (PowerShell or Command Prompt):
+
+   ```bash
+   git clone https://github.com/Mist10148/TRAFFIC-SIGNAL-TIMING-INTERSECTION-CAPACITY-OPTIMIZER.git
+   cd TRAFFIC-SIGNAL-TIMING-INTERSECTION-CAPACITY-OPTIMIZER
+   ```
+
+2. Create and activate a virtual environment:
+
+   ```bash
+   python -m venv .venv
+   .venv\Scripts\activate
+   ```
+
+   In PowerShell, if activation is blocked, run `Set-ExecutionPolicy -Scope Process RemoteSigned` first.
+
+3. Install the dependency:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. Start the app:
+
+   ```bash
+   python main.py
+   ```
+
+The FLOW window opens on the model selection screen. See [How to use](#how-to-use) for the steps from there.
+
+### Optional: tests and packaging
+
+For running the tests or building an executable, install the development tools and run:
 
 ```bash
-git clone <repo-url>
-cd TRAFFIC-SIGNAL-TIMING-INTERSECTION-CAPACITY-OPTIMIZER
-python -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements.txt
-python main.py
+pip install -r requirements-dev.txt
+python -m pytest
 ```
 
 ## Screenshots
