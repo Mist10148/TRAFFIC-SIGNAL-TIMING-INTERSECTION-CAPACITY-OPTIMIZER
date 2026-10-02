@@ -125,15 +125,15 @@ Write pytest tests with `pytest.approx` for floats:
 ---
 
 ## Checklist
-- [ ] Models and the `MODELS` registry match PRD section 5.2
-- [ ] Formula functions implemented and individually tested
-- [ ] Largest-remainder rounding guarantees `sum(greens) == Te`
-- [ ] Oversaturation returns a result object, not an exception
-- [ ] Validation collects all errors in one pass
-- [ ] All six acceptance cases pass
-- [ ] Coverage 95 percent or more on both modules
-- [ ] No GUI imports in `core/`
-- [ ] Comments are single-line only, no docstring blocks
+- [x] Models and the `MODELS` registry match PRD section 5.2
+- [x] Formula functions implemented and individually tested
+- [x] Largest-remainder rounding guarantees `sum(greens) == Te`
+- [x] Oversaturation returns a result object, not an exception
+- [x] Validation collects all errors in one pass
+- [x] All six acceptance cases pass
+- [x] Coverage 95 percent or more on both modules
+- [x] No GUI imports in `core/`
+- [x] Comments are single-line only, no docstring blocks
 
 ## Definition of done
 `compute_timing` returns correct, rounded, self-consistent results for every phase model, and every failure path is a value, not a crash.

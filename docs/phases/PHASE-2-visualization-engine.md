@@ -91,13 +91,13 @@ Add `scale_segments(row: TimelineRow, pixel_width: int, cycle: int) -> list[tupl
 ---
 
 ## Checklist
-- [ ] Text output for case 1 matches the spec character for character
-- [ ] Every row sums to the cycle for all acceptance cases
-- [ ] `build_timeline` rejects oversaturated results
-- [ ] Pixel scaling has no gaps or overlaps
-- [ ] `render_report` sections complete and ordered
-- [ ] Coverage 95 percent or more on `visualizer.py`
-- [ ] No GUI imports, single-line comments only
+- [x] Text output for case 1 matches the spec character for character
+- [x] Every row sums to the cycle for all acceptance cases
+- [x] `build_timeline` rejects oversaturated results
+- [x] Pixel scaling has no gaps or overlaps
+- [x] `render_report` sections complete and ordered
+- [x] Coverage 95 percent or more on `visualizer.py`
+- [x] No GUI imports, single-line comments only
 
 ## Definition of done
 Given any valid `TimingResult`, the app can get both drawable timeline data and a ready-to-print text diagram without touching the GUI.

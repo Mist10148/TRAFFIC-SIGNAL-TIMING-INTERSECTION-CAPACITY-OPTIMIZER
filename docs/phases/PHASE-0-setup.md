@@ -116,14 +116,14 @@ class FlowApp(ctk.CTk):
 ---
 
 ## Checklist
-- [ ] `python --version` is 3.11 or higher
-- [ ] `.venv` created and ignored by git
-- [ ] `requirements.txt` and `requirements-dev.txt` exist and install cleanly
-- [ ] Folder skeleton matches PRD section 12
-- [ ] `pytest` runs without errors (no tests yet)
-- [ ] `python main.py` opens the blank window and closes cleanly
-- [ ] `CONTRIBUTING.md` written
-- [ ] Phase committed and merged
+- [x] `python --version` is 3.11 or higher
+- [x] `.venv` created and ignored by git
+- [x] `requirements.txt` and `requirements-dev.txt` exist and install cleanly
+- [x] Folder skeleton matches PRD section 12
+- [x] `pytest` runs without errors (no tests yet)
+- [x] `python main.py` opens the blank window and closes cleanly
+- [x] `CONTRIBUTING.md` written
+- [x] Phase committed and merged
 
 ## Definition of done
 A fresh clone can follow the README, install dependencies and see the empty FLOW window. Nothing else is implemented yet.
