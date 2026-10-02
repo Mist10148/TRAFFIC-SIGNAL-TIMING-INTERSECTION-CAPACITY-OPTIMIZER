@@ -12,10 +12,11 @@ KINDS = {
 
 class Banner(ctk.CTkFrame):
     def __init__(self, parent, kind: str, text: str) -> None:
-        super().__init__(parent, corner_radius=theme.RADIUS_INPUT)
+        # height=0 lets the banner shrink to its text instead of the 200 px default.
+        super().__init__(parent, corner_radius=theme.RADIUS_INPUT, height=0)
         self.columnconfigure(2, weight=1)
 
-        self.bar = ctk.CTkFrame(self, width=4, corner_radius=0)
+        self.bar = ctk.CTkFrame(self, width=4, height=1, corner_radius=0)
         self.bar.grid(row=0, column=0, sticky="ns")
 
         self.icon = ctk.CTkLabel(

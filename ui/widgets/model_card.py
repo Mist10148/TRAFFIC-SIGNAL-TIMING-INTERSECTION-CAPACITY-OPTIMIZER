@@ -17,6 +17,7 @@ class ModelCard(ctk.CTkFrame):
         super().__init__(
             parent,
             corner_radius=theme.RADIUS_CARD,
+            height=0,
             border_width=1,
             fg_color=theme.color("surface"),
             border_color=theme.color("border"),

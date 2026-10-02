@@ -2,6 +2,7 @@ import customtkinter as ctk
 
 from core.models import TimingInput, TimingResult
 from ui import theme
+from ui.screens.model_select import ModelSelectScreen
 
 WINDOW_WIDTH = 1120
 WINDOW_HEIGHT = 720
@@ -38,7 +39,7 @@ class FlowApp(ctk.CTk):
         self.content.rowconfigure(0, weight=1)
 
         self.screens: dict[str, ctk.CTkFrame] = {
-            "model": self._placeholder("Choose a phase model"),
+            "model": ModelSelectScreen(self.content, self),
             "inputs": self._placeholder("Inputs: coming in Phase 4"),
             "results": self._placeholder("Results: coming in Phase 5"),
         }
