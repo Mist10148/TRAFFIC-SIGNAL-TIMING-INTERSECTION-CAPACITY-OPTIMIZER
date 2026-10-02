@@ -63,13 +63,13 @@
 ---
 
 ## Checklist
-- [ ] All colors come from `theme.py`
-- [ ] Both appearance modes verified by eye
-- [ ] Sidebar buttons enable and disable by app state
-- [ ] Model cards keyboard accessible (Tab, Enter, Space)
-- [ ] Responsive grid works at 960 to 1600 px
-- [ ] Selecting a model sets shared state and navigates
-- [ ] Single-line comments only, no hex literals outside `theme.py`
+- [x] All colors come from `theme.py`
+- [x] Both appearance modes verified by eye
+- [x] Sidebar buttons enable and disable by app state
+- [x] Model cards keyboard accessible (Tab, Enter, Space)
+- [x] Responsive grid works at 960 to 1600 px
+- [x] Selecting a model sets shared state and navigates
+- [x] Single-line comments only, no hex literals outside `theme.py`
 
 ## Definition of done
 The app looks like a finished product shell: you can launch it, switch theme, pick a model and navigate, even though inputs and results are not built yet.
