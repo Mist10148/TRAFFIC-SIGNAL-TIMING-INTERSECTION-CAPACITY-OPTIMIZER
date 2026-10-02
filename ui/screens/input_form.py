@@ -5,6 +5,7 @@ from core.models import MODELS
 from core.validation import parse_number, validate_inputs
 from ui import theme
 from ui.widgets.banner import Banner
+from ui.widgets.card import Card
 from ui.widgets.labeled_entry import LabeledEntry
 from ui.widgets.y_meter import YMeter
 
@@ -69,7 +70,7 @@ class InputFormScreen(ctk.CTkFrame):
         self.body = ctk.CTkScrollableFrame(self, fg_color="transparent")
         self.body.grid(row=1, column=0, sticky="nsew", padx=(theme.PAD_L, theme.PAD_S))
 
-        self.card_a = self._card("Intersection parameters")
+        self.card_a = Card(self.body, "Intersection parameters")
         self.entries["saturation_flow"] = LabeledEntry(
             self.card_a, "Saturation flow rate", "veh/hr/lane",
             "Typical 1800 to 1900", placeholder="1900",
@@ -81,23 +82,11 @@ class InputFormScreen(ctk.CTkFrame):
         for row, key in enumerate(GLOBAL_KEYS, start=1):
             self.entries[key].grid(row=row, column=0, sticky="ew", padx=theme.PAD_M, pady=(0, theme.PAD_M))
 
-        self.card_b = self._card("Traffic volumes")
+        self.card_b = Card(self.body, "Traffic volumes")
         self.volume_grid = ctk.CTkFrame(self.card_b, fg_color="transparent")
         self.volume_grid.grid(row=1, column=0, sticky="ew", padx=theme.PAD_M)
         for column in range(2):
             self.volume_grid.columnconfigure(column, weight=1, uniform="volumes")
-
-    def _card(self, title: str) -> ctk.CTkFrame:
-        card = ctk.CTkFrame(
-            self.body, corner_radius=theme.RADIUS_CARD, border_width=1, height=0,
-            fg_color=theme.color("surface"), border_color=theme.color("border"),
-        )
-        card.columnconfigure(0, weight=1)
-        ctk.CTkLabel(
-            card, text=title, anchor="w",
-            font=theme.font(18, serif=True), text_color=theme.color("text"),
-        ).grid(row=0, column=0, sticky="ew", padx=theme.PAD_M, pady=theme.PAD_M)
-        return card
 
     def _build_footer(self) -> None:
         footer = ctk.CTkFrame(
