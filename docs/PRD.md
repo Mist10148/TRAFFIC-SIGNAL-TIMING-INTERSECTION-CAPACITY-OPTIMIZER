@@ -19,7 +19,8 @@ FLOW is a desktop application that computes optimal fixed-time traffic signal ti
 - total effective green time,
 - green time per phase,
 - an oversaturation warning when demand exceeds capacity (Y >= 1.0),
-- a phase timeline diagram (Green, Yellow/All-Red, Red) across the full cycle.
+- a phase timeline diagram (Green, Yellow/All-Red, Red) across the full cycle,
+- written Summary, Description, Results and Discussion sections that explain the answer.
 
 The earlier prototype was a console script. This version is a polished, app-like GUI. The calculation and visualization logic stays UI-independent so it can be checked without a window.
 
@@ -162,14 +163,14 @@ The original proposal flowchart has no loop. The retry loops above are the requi
 ### 10.1 Look and feel
 - Framework: CustomTkinter, single window, left sidebar plus content area, card-based layout, rounded corners (12 px cards, 8 px inputs).
 - Light and dark themes (follows the system). Tokens live in one place (`ui/theme.py`).
-- Typography: a clean sans-serif UI font (Segoe UI Variable / Segoe UI fallback) and a monospace font (Cascadia Mono / Consolas fallback) for the text timeline and numeric readouts.
+- Typography: a clean sans-serif UI font (Segoe UI Variable / Segoe UI fallback) and a monospace font (Cascadia Mono / Consolas fallback) for the formulas and numeric readouts.
 
 Color tokens, fonts and spacing live in `ui/theme.py`: a warm, Claude-inspired palette with a clay accent.
 
 ### 10.2 Screens
 1. **Model Select**: five cards (2, 3, 4, 6, 8 phase), each with a name, a one-line description and a tiny phase diagram icon drawn on a canvas.
 2. **Input Form**: left column global inputs, right column the model's volume fields in a two-column grid; live "Y so far" meter updates as valid numbers are typed; primary button "Calculate", secondary "Reset".
-3. **Results**: four stat cards (Cycle `C`, Effective Green `Te`, Total Flow Ratio `Y`, Total Lost Time `L`), a per-phase table (phase, volume, `Yi`, green, share of `Te`), the graphical timeline, the text timeline in a monospace box, buttons "Copy results", "Edit inputs", "New calculation".
+3. **Results**: four stat cards (Cycle `C`, Effective Green `Te`, Total Flow Ratio `Y`, Total Lost Time `L`), a per-phase table (phase, volume, `Yi`, green, share of `Te`), the graphical timeline, four written cards (Summary, Description, Results, Discussion), the formulas used, buttons "Copy results", "Edit inputs", "New calculation".
 4. **Oversaturation state**: an error banner on the Input Form with the actual `Y`, a short explanation and the top contributing phases.
 
 ### 10.3 Components (`ui/widgets/`)

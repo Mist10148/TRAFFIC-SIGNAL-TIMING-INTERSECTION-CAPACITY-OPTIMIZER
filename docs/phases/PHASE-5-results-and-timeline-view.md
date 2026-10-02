@@ -1,6 +1,6 @@
 # Phase 5: Results and Timeline View
 
-**Goal:** the Results screen: summary cards, per-phase table, graphical timeline, text timeline, copy-to-clipboard and navigation back into the loop.
+**Goal:** the Results screen: summary cards, per-phase table, graphical timeline, written sections, copy-to-clipboard and navigation back into the loop.
 **Prerequisites:** Phase 2 (visualizer), Phase 4 (the input form produces `app.result`).
 **Output:** `ui/widgets/stat_card.py`, `ui/widgets/phase_table.py`, `ui/widgets/timeline_canvas.py`, `ui/screens/results.py`.
 **Read first:** [PRD](../PRD.md) sections 7 (FR-09 to FR-12, FR-15) and 10.2.
@@ -47,7 +47,7 @@ Top to bottom inside one scrollable frame:
    - "Total lost time (L)": `{L} s`, subtitle `{n} phases x {li} s`
 4. Card "Phase green times": `PhaseTable`.
 5. Card "Phase timeline": legend, `TimelineCanvas`.
-6. Card "Text diagram": read-only mono `CTkTextbox` containing `render_text(timeline)`, horizontal scroll enabled (wrap off), height sized to the row count.
+6. Four cards "Summary", "Description", "Results" and "Discussion": wrapped labels filled from `narrative.build_narrative(result, saturation_flow, lost_time)`. The wrap width follows the window width.
 7. Card "Formulas used": a compact list showing each formula with the substituted numbers, for example `Co = (1.5 x 8 + 5) / (1 - 0.7632) = 71.78 s`, `Te = 75 - 8 = 67 s`, `g(NS) = (0.4474 / 0.7632) x 67 = 39.28 -> 39 s`. Build these strings in a small helper `formula_lines(result, lost_time)` inside `ui/screens/results.py`. This helps students check the hand calculation.
 8. Action bar (sticky bottom or at the end): "Copy results" (primary), "Edit inputs" (secondary), "New calculation" (text).
 
@@ -78,7 +78,7 @@ For each acceptance case in PRD section 11 (use "Fill example" then Calculate):
 - [x] Four stat cards with correct values and subtitles
 - [x] Phase table totals match `Y` and `Te`
 - [ ] Canvas timeline scales, redraws on resize and theme change, has axis and tooltip
-- [x] Text diagram matches the spec exactly
+- [x] Summary, Description, Results and Discussion cards replace the old text diagram
 - [x] Formula substitution lines are correct
 - [x] Copy results works and confirms visually
 - [x] Edit inputs keeps values; New calculation clears them

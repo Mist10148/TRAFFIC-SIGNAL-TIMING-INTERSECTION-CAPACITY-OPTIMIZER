@@ -14,6 +14,7 @@ Checked on 2026-10-02 on Windows 11 with Python 3.13. "Scripted" means a throwaw
 | Edge: bad numbers | `nan`, `inf`, `-inf`, 200 characters of text | "Enter a number", no crash | Pass (scripted) | 2026-10-02 |
 | Model switch | 2-phase to 4-phase | Saturation flow and lost time kept, volumes rebuilt | Pass (scripted) | 2026-10-02 |
 | Appearance Light and Dark | Screenshots of every screen in both | Readable, no leftover wrong colors | Pass (screenshots read by eye) | 2026-10-02 |
+| Written sections | 4-Phase example, Light and Dark, 1120 x 720 | Summary, Description, Results and Discussion readable and wrapped | Pass (screenshots read by eye) | 2026-10-02 |
 | Appearance switching on each screen | Use the sidebar control while on each screen | Screen recolors without a glitch | Not run | |
 | Window size 960 x 640 | Screenshots of all three screens, both themes | Nothing cut off without a scrollbar | Pass (screenshots read by eye) | 2026-10-02 |
 | Window size 1120 x 720 | Screenshots of all three screens | Layout as designed | Pass (screenshots read by eye) | 2026-10-02 |

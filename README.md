@@ -81,9 +81,17 @@ Results:
 
 ![Results](docs/images/results.png)
 
-Phase timeline, written summary and formulas:
+Phase timeline:
 
 ![Timeline](docs/images/timeline.png)
+
+Written Summary, Description and Results sections:
+
+![Written sections](docs/images/written-sections.png)
+
+Discussion and the formulas used:
+
+![Discussion and formulas](docs/images/discussion-formulas.png)
 
 Light theme:
 
@@ -95,7 +103,7 @@ Light theme:
 2. Enter the saturation flow rate and lost time per phase, then the traffic volume for each movement.
 3. Press **Calculate**. If a field is invalid, it is highlighted with a message; fix it and press Calculate again.
 4. If the app reports oversaturation (`Y >= 1.0`), lower the demand or change the phasing and try again.
-5. Read the cycle, green times and timeline on the results screen. Use **Copy results**, **Edit inputs** or **New calculation**.
+5. Read the cycle, green times and timeline on the results screen, then the written Summary, Description, Results and Discussion below them. Use **Copy results**, **Edit inputs** or **New calculation**.
 
 ## Project structure
 
