@@ -162,21 +162,10 @@ The original proposal flowchart has no loop. The retry loops above are the requi
 
 ### 10.1 Look and feel
 - Framework: CustomTkinter, single window, left sidebar plus content area, card-based layout, rounded corners (12 px cards, 8 px inputs).
-- Dark first, with a light theme. Tokens live in one place (`ui/theme.py`).
+- Light and dark themes (follows the system). Tokens live in one place (`ui/theme.py`).
 - Typography: a clean sans-serif UI font (Segoe UI Variable / Segoe UI fallback) and a monospace font (Cascadia Mono / Consolas fallback) for the text timeline and numeric readouts.
 
-| Token | Dark | Light |
-|---|---|---|
-| `bg` | `#0E1116` | `#F4F6F9` |
-| `surface` | `#161B22` | `#FFFFFF` |
-| `surface_alt` | `#1F2630` | `#EAEEF3` |
-| `border` | `#2A3340` | `#D5DCE5` |
-| `text` | `#E6EDF3` | `#1B2430` |
-| `text_muted` | `#8B98A9` | `#5C6B7F` |
-| `accent` | `#2DD4BF` | `#0F9F8E` |
-| `signal_green` | `#22C55E` | `#16A34A` |
-| `signal_amber` | `#F59E0B` | `#D97706` |
-| `signal_red` | `#EF4444` | `#DC2626` |
+Color tokens, fonts and spacing are defined in [DESIGN.md](../DESIGN.md): a warm, Claude-inspired palette with a clay accent.
 
 ### 10.2 Screens
 1. **Model Select**: five cards (2, 3, 4, 6, 8 phase), each with a name, a one-line description and a tiny phase diagram icon drawn on a canvas.
