@@ -6,7 +6,7 @@ A Python desktop app (CustomTkinter) that calculates optimal fixed-time signal t
 
 > Course project for ENGG 1035 (Civil Engineering, Transportation Engineering). Submission: October 16, 2026.
 
-**Status:** Phases 0 to 4 done (setup, calculation engine, visualization engine, GUI shell, input form with validation). The results screen is next; follow the phase files in [docs/phases](docs/phases).
+**Status:** Phases 0 to 5 done (setup, calculation engine, visualization engine, GUI shell, input form, results screen). Polish and packaging are next; follow the phase files in [docs/phases](docs/phases).
 
 ---
 

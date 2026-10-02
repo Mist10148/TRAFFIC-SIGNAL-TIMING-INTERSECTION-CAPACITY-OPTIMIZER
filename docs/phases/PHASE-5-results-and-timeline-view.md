@@ -75,14 +75,14 @@ For each acceptance case in PRD section 11 (use "Fill example" then Calculate):
 ---
 
 ## Checklist
-- [ ] Four stat cards with correct values and subtitles
-- [ ] Phase table totals match `Y` and `Te`
+- [x] Four stat cards with correct values and subtitles
+- [x] Phase table totals match `Y` and `Te`
 - [ ] Canvas timeline scales, redraws on resize and theme change, has axis and tooltip
-- [ ] Text diagram matches the spec exactly
-- [ ] Formula substitution lines are correct
-- [ ] Copy results works and confirms visually
-- [ ] Edit inputs keeps values; New calculation clears them
-- [ ] Warnings display without blocking the results
+- [x] Text diagram matches the spec exactly
+- [x] Formula substitution lines are correct
+- [x] Copy results works and confirms visually
+- [x] Edit inputs keeps values; New calculation clears them
+- [x] Warnings display without blocking the results
 - [ ] All items in 5.7 verified
 
 ## Definition of done
