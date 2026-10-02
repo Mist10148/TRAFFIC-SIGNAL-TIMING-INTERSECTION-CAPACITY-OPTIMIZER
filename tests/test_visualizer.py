@@ -2,7 +2,14 @@ import pytest
 
 from core.calculator import compute_timing
 from core.models import MODELS, TimingInput
-from core.visualizer import Segment, build_timeline, render_text
+from core.visualizer import (
+    Segment,
+    TimelineRow,
+    build_timeline,
+    render_report,
+    render_text,
+    scale_segments,
+)
 
 SATURATION = 1900
 LOST = 4
@@ -88,3 +95,53 @@ def test_broken_row_is_caught():
 
     with pytest.raises(AssertionError):
         build_timeline(result, LOST)
+
+
+def test_report_sections_come_in_order():
+    result = solve("2", NS=850, EW=600)
+    report = render_report(result, build_timeline(result, LOST), SATURATION, LOST)
+
+    headings = ["INPUTS", "CALCULATED VARIABLES", "OUTPUT", "--- VISUAL PHASE DIAGRAM"]
+    positions = [report.index(h) for h in headings]
+
+    assert positions == sorted(positions)
+    assert "WARNINGS" not in report
+    assert "Cycle Length: 75 s" in report
+    assert "Total Flow Ratio (Y): 0.7632" in report
+    assert report.endswith(CASE_1_TEXT)
+
+
+def test_report_includes_warnings_before_the_diagram():
+    result = solve("2", NS=1000, EW=881)
+    report = render_report(result, build_timeline(result, LOST), SATURATION, LOST)
+
+    assert report.index("OUTPUT") < report.index("WARNINGS") < report.index("--- VISUAL")
+
+
+@pytest.mark.parametrize("pixel_width", [600, 137, 20])
+@pytest.mark.parametrize("model_key, volumes", CASES)
+def test_scale_segments_fill_the_canvas_without_gaps(model_key, volumes, pixel_width):
+    timeline = build_timeline(solve(model_key, **volumes), LOST)
+
+    for row in timeline.rows:
+        scaled = scale_segments(row, pixel_width, timeline.cycle)
+        assert all(width >= 2 for _, _, width in scaled)
+        for (_, x, width), (_, next_x, _) in zip(scaled, scaled[1:]):
+            assert next_x >= x + width - 2  # only the 2 px minimum may nudge an edge
+
+
+def test_scale_segments_on_a_600_px_canvas_totals_600():
+    timeline = build_timeline(solve("2", NS=850, EW=600), LOST)
+
+    for row in timeline.rows:
+        scaled = scale_segments(row, 600, timeline.cycle)
+        assert sum(width for _, _, width in scaled) == 600
+        assert scaled[0][1] == 0
+
+
+def test_tiny_segment_still_gets_two_pixels():
+    row = TimelineRow("X", "X", (Segment("G", 0, 1), Segment("R", 1, 999)))
+
+    scaled = scale_segments(row, 100, 1000)
+
+    assert scaled[0] == ("G", 0, 2)

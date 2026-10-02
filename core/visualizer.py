@@ -82,3 +82,63 @@ def render_text(timeline: Timeline) -> str:
         blocks = "".join(_block(s) for s in row.segments)
         lines.append(f"{row.code:<{width}}: {blocks}")
     return "\n".join(lines)
+
+
+def _inputs_section(result: TimingResult, saturation_flow: float, lost_time: float) -> list[str]:
+    lines = [
+        "INPUTS",
+        f"Model: {result.model.name}",
+        f"Saturation Flow: {saturation_flow:g} veh/hr",
+        f"Lost Time per Phase: {lost_time:g} s",
+    ]
+    lines += [f"Volume {p.code}: {p.volume:g} veh/hr" for p in result.phases]
+    return lines
+
+
+def _variables_section(result: TimingResult) -> list[str]:
+    lines = ["CALCULATED VARIABLES"]
+    lines += [f"Flow Ratio {p.code}: {p.flow_ratio:.4f}" for p in result.phases]
+    lines += [
+        f"Total Flow Ratio (Y): {result.total_flow_ratio:.4f}",
+        f"Total Lost Time (L): {result.total_lost_time} s",
+        f"Active Phases: {result.active_count}",
+    ]
+    return lines
+
+
+def _output_section(result: TimingResult) -> list[str]:
+    lines = [
+        "OUTPUT",
+        f"Webster Cycle (Co): {result.raw_cycle:.2f} s",
+        f"Cycle Length: {result.cycle} s",
+        f"Effective Green (Te): {result.effective_green} s",
+    ]
+    lines += [f"Green {p.code}: {p.green} s" for p in result.phases]
+    return lines
+
+
+def render_report(
+    result: TimingResult, timeline: Timeline, saturation_flow: float, lost_time: float
+) -> str:
+    sections = [
+        _inputs_section(result, saturation_flow, lost_time),
+        _variables_section(result),
+        _output_section(result),
+    ]
+    if result.warnings:
+        sections.append(["WARNINGS"] + [f"- {w}" for w in result.warnings])
+    sections.append([render_text(timeline)])
+    return "\n\n".join("\n".join(lines) for lines in sections)
+
+
+def scale_segments(row: TimelineRow, pixel_width: int, cycle: int) -> list[tuple[str, int, int]]:
+    scaled = []
+    for seg in row.segments:
+        x = round(seg.start / cycle * pixel_width)
+        # Measuring the width from the rounded edges means neighbours always
+        # meet exactly: no gaps, no overlaps.
+        width = round((seg.start + seg.duration) / cycle * pixel_width) - x
+        if seg.duration > 0:
+            width = max(width, 2)
+        scaled.append((seg.kind, x, width))
+    return scaled
