@@ -1,7 +1,8 @@
 import customtkinter as ctk
 
 from core.models import TimingResult
-from core.visualizer import build_timeline, render_report, render_text
+from core.narrative import build_narrative
+from core.visualizer import build_timeline, render_report
 from ui import theme
 from ui.widgets.banner import Banner
 from ui.widgets.card import Card
@@ -13,7 +14,7 @@ from ui.widgets.y_meter import YMeter
 TWO_BY_TWO_BELOW_WIDTH = 760
 RELAYOUT_DELAY_MS = 100
 COPIED_MESSAGE_MS = 1500
-TEXT_LINE_HEIGHT = 20
+TEXT_MARGIN = 120  # scrollbar, card padding and body padding around the wrapped text
 
 
 def formula_lines(result: TimingResult, saturation_flow: float, lost_time: int) -> list[str]:
@@ -111,17 +112,19 @@ class ResultsScreen(ctk.CTkFrame):
         self.timeline_view = TimelineCanvas(timeline_card)
         self.timeline_view.grid(row=1, column=0, sticky="ew", padx=theme.PAD_M, pady=(0, theme.PAD_M))
 
-        text_card = Card(self.body, "Text diagram")
-        text_card.grid(row=5, column=0, sticky="ew", pady=(theme.PAD_M, 0))
-        self.diagram = ctk.CTkTextbox(
-            text_card, wrap="none", font=theme.font(12, mono=True),
-            fg_color=theme.color("surface_alt"), text_color=theme.color("text"),
-            corner_radius=theme.RADIUS_INPUT,
-        )
-        self.diagram.grid(row=1, column=0, sticky="ew", padx=theme.PAD_M, pady=(0, theme.PAD_M))
+        self.narrative_labels: dict[str, ctk.CTkLabel] = {}
+        for offset, title in enumerate(("Summary", "Description", "Results", "Discussion")):
+            card = Card(self.body, title)
+            card.grid(row=5 + offset, column=0, sticky="ew", pady=(theme.PAD_M, 0))
+            label = ctk.CTkLabel(
+                card, text="", anchor="w", justify="left", wraplength=500,
+                font=theme.font(13), text_color=theme.color("text"),
+            )
+            label.grid(row=1, column=0, sticky="ew", padx=theme.PAD_M, pady=(0, theme.PAD_M))
+            self.narrative_labels[title] = label
 
         formula_card = Card(self.body, "Formulas used")
-        formula_card.grid(row=6, column=0, sticky="ew", pady=theme.PAD_M)
+        formula_card.grid(row=9, column=0, sticky="ew", pady=theme.PAD_M)
         self.formulas = ctk.CTkLabel(
             formula_card, text="", anchor="w", justify="left",
             font=theme.font(12, mono=True), text_color=theme.color("text"),
@@ -161,7 +164,7 @@ class ResultsScreen(ctk.CTkFrame):
             return
 
         timeline = build_timeline(result, data.lost_time)
-        self.report_text = render_report(result, timeline, data.saturation_flow, data.lost_time)
+        self.report_text = render_report(result, data.saturation_flow, data.lost_time)
 
         self.title.configure(text=f"{result.model.name} results")
         self.subtitle.configure(
@@ -172,7 +175,7 @@ class ResultsScreen(ctk.CTkFrame):
         self._fill_stat_cards(result, data.lost_time)
         self.table.set(result)
         self.timeline_view.draw(timeline)
-        self._fill_diagram(timeline, render_text(timeline))
+        self._fill_narrative(result, data.saturation_flow, data.lost_time)
         self.formulas.configure(text="\n".join(formula_lines(result, data.saturation_flow, data.lost_time)))
         self._layout_stat_cards(force=True)
 
@@ -204,11 +207,15 @@ class ResultsScreen(ctk.CTkFrame):
             f"{result.total_lost_time} s", f"{result.active_count} phases x {lost_time} s",
         )
 
-    def _fill_diagram(self, timeline, text: str) -> None:
-        self.diagram.configure(state="normal", height=(len(timeline.rows) + 1) * TEXT_LINE_HEIGHT + 16)
-        self.diagram.delete("1.0", "end")
-        self.diagram.insert("1.0", text)
-        self.diagram.configure(state="disabled")
+    def _fill_narrative(self, result: TimingResult, saturation_flow: float, lost_time: int) -> None:
+        for title, text in build_narrative(result, saturation_flow, lost_time):
+            self.narrative_labels[title].configure(text=text)
+        self._wrap_narrative()
+
+    def _wrap_narrative(self) -> None:
+        wrap = max(self.winfo_width() - TEXT_MARGIN, 200)
+        for label in self.narrative_labels.values():
+            label.configure(wraplength=wrap)
 
     # Layout
 
@@ -219,6 +226,7 @@ class ResultsScreen(ctk.CTkFrame):
 
     def _layout_stat_cards(self, force: bool = False) -> None:
         self._relayout_job = None
+        self._wrap_narrative()
         columns = 2 if self.winfo_width() < TWO_BY_TWO_BELOW_WIDTH else 4
         if columns == self.stat_columns and not force:
             return
@@ -248,8 +256,5 @@ class ResultsScreen(ctk.CTkFrame):
 
     def _on_ctrl_c(self, _event) -> None:
         if self.app.current != "results":
-            return
-        # If the user selected some text in the diagram, let the normal copy happen.
-        if self.diagram.tag_ranges("sel"):
             return
         self._copy_report()
