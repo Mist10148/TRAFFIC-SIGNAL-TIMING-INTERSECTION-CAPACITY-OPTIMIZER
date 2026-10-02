@@ -42,7 +42,8 @@ class LabeledEntry(ctk.CTkFrame):
             font=theme.font(11), text_color=theme.color("text_muted"),
         )
         self.note.grid(row=2, column=0, sticky="ew")
-        self.note.bind("<Configure>", lambda e: self.note.configure(wraplength=max(e.width - 4, 80)))
+        # Wrap against the whole field width, not the label itself, to avoid a resize loop.
+        self.bind("<Configure>", lambda e: self.note.configure(wraplength=max(e.width - 8, 80)))
 
         self.entry.bind("<FocusIn>", self._select_all)
         self.entry.bind("<FocusOut>", self._trim)

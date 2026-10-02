@@ -10,6 +10,10 @@ KINDS = {
 }
 
 
+# Space taken by the bar, icon and padding to the left and right of the text.
+BANNER_TEXT_INSET = 80
+
+
 class Banner(ctk.CTkFrame):
     def __init__(self, parent, kind: str, text: str) -> None:
         # height=0 lets the banner shrink to its text instead of the 200 px default.
@@ -30,8 +34,9 @@ class Banner(ctk.CTkFrame):
             font=theme.font(13), text_color=theme.color("text"),
         )
         self.message.grid(row=0, column=2, padx=(0, theme.PAD_M), pady=theme.PAD_M, sticky="ew")
-        # Wrap the text to whatever width the banner ends up with.
-        self.message.bind("<Configure>", self._wrap_to_width)
+        # Wrap against the banner's own width. Using the label's width would feed
+        # back on itself, since wrapping changes the label's size.
+        self.bind("<Configure>", self._wrap_to_width)
 
         self.set(kind, text)
 
@@ -49,4 +54,4 @@ class Banner(ctk.CTkFrame):
         self.grid_remove()
 
     def _wrap_to_width(self, event) -> None:
-        self.message.configure(wraplength=max(event.width - 4, 100))
+        self.message.configure(wraplength=max(event.width - BANNER_TEXT_INSET, 100))
