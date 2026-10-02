@@ -105,7 +105,8 @@ class TimelineCanvas(ctk.CTkFrame):
         if kind == "G":
             return theme.resolve("signal_green"), theme.resolve("on_accent")
         if kind == "YR":
-            return theme.resolve("signal_amber"), theme.resolve("on_accent")
+            # Dark text reads much better than white on amber.
+            return theme.resolve("signal_amber"), theme.resolve("text")
         faded = blend(theme.resolve("signal_red"), theme.resolve("surface"), RED_STRENGTH)
         return faded, theme.resolve("text")
 
