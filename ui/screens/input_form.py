@@ -98,12 +98,6 @@ class InputFormScreen(ctk.CTkFrame):
 
         self.meter = YMeter(footer)
         self.meter.grid(row=0, column=0, sticky="ew", padx=theme.PAD_M, pady=(theme.PAD_M, 0))
-        self.count_label = ctk.CTkLabel(
-            footer, text="", anchor="w",
-            font=theme.font(12), text_color=theme.color("text_muted"),
-        )
-        self.count_label.grid(row=1, column=0, sticky="ew", padx=theme.PAD_M)
-
         self.banner = Banner(footer, "error", "")
         self.banner.grid(row=2, column=0, sticky="ew", padx=theme.PAD_M, pady=(theme.PAD_S, 0))
         self.banner.hide()
@@ -127,6 +121,12 @@ class InputFormScreen(ctk.CTkFrame):
             fg_color="transparent", hover_color=theme.color("surface_alt"),
             text_color=theme.color("accent"), command=self._on_fill_example,
         ).pack(side="left")
+        # Sits in the button row to keep the footer short on small windows.
+        self.count_label = ctk.CTkLabel(
+            self.buttons, text="", anchor="w",
+            font=theme.font(12), text_color=theme.color("text_muted"),
+        )
+        self.count_label.pack(side="left", padx=theme.PAD_M)
 
     # Showing the screen and building the fields
 

@@ -17,7 +17,7 @@ class ModelSelectScreen(ctk.CTkFrame):
         self._relayout_job: str | None = None
 
         self.columnconfigure(0, weight=1)
-        self.rowconfigure(4, weight=1)
+        self.rowconfigure(2, weight=1)
 
         ctk.CTkLabel(
             self, text="Choose a phase model", anchor="w",
@@ -28,7 +28,7 @@ class ModelSelectScreen(ctk.CTkFrame):
             font=theme.font(13), text_color=theme.color("text_muted"),
         ).grid(row=1, column=0, sticky="ew", padx=theme.PAD_L, pady=(4, theme.PAD_M))
 
-        self.grid_area = ctk.CTkFrame(self, fg_color="transparent")
+        self.grid_area = ctk.CTkScrollableFrame(self, fg_color="transparent")
         self.grid_area.grid(row=2, column=0, sticky="nsew", padx=theme.PAD_L)
         self.cards = [ModelCard(self.grid_area, model, self._choose) for model in MODELS.values()]
 

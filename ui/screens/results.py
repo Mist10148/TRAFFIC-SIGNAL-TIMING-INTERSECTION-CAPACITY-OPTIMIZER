@@ -179,6 +179,11 @@ class ResultsScreen(ctk.CTkFrame):
     def _show_warnings(self, warnings: list[str]) -> None:
         for child in self.warning_area.winfo_children():
             child.destroy()
+        # An empty area would still leave a gap, so only show it when there is something to say.
+        if warnings:
+            self.warning_area.grid()
+        else:
+            self.warning_area.grid_remove()
         for row, text in enumerate(warnings):
             Banner(self.warning_area, "warning", text).grid(
                 row=row, column=0, sticky="ew", pady=(0, theme.PAD_S),
