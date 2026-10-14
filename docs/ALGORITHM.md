@@ -5,7 +5,7 @@ This document describes how FLOW works, in two parts:
 1. **The program**: what the user does, from opening the app to reading the results.
 2. **The algorithm**: Webster's method as FLOW runs it, with an explanation, a flowchart and pseudocode.
 
-The flowcharts are written in Mermaid, which GitHub renders as diagrams. Standard flowchart shapes are used: rounded boxes for Start and End, slanted boxes for input and output, rectangles for processes and diamonds for decisions.
+The flowcharts are written in Mermaid, which GitHub renders as diagrams. Each one also has a PNG copy in [docs/images](images) for reports and slides. Standard flowchart shapes are used: rounded boxes for Start and End, slanted boxes for input and output, rectangles for processes and diamonds for decisions.
 
 ---
 
@@ -49,6 +49,10 @@ flowchart TD
     O -- New calculation --> B
     O -- Close window --> Q([End])
 ```
+
+PNG version:
+
+![Program flowchart](images/flowchart-program.png)
 
 ### Pseudocode
 
@@ -207,6 +211,10 @@ flowchart TD
     W --> Z
 ```
 
+PNG version:
+
+![Algorithm flowchart](images/flowchart-algorithm.png)
+
 #### Green allocation (largest-remainder rounding)
 
 ```mermaid
@@ -223,6 +231,10 @@ flowchart TD
     G -- No --> J[/Output: g1..gn,<br/>which add up to exactly Te/]
     J --> K([End])
 ```
+
+PNG version:
+
+![Green allocation flowchart](images/flowchart-green-allocation.png)
 
 ### Pseudocode
 
