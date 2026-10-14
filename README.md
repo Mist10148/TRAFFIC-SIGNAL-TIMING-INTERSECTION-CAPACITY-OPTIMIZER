@@ -166,6 +166,7 @@ docs/                   PRD and phase task files
 ## Documentation
 
 - [Product Requirements Document](docs/PRD.md)
+- [Program flowchart and algorithm](docs/ALGORITHM.md): flowcharts, explanation and pseudocode
 - Phase task files (follow in order):
   1. [Phase 0: Project setup](docs/phases/PHASE-0-setup.md)
   2. [Phase 1: Calculation engine](docs/phases/PHASE-1-calculation-engine.md)
