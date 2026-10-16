@@ -2,7 +2,7 @@
 
 **Goal:** a runnable empty project: environment, folders, dependencies, conventions and a window that opens.
 **Prerequisites:** Python 3.11+ installed, Git configured, repo cloned.
-**Output:** folder skeleton, `requirements.txt`, `requirements-dev.txt`, `main.py` that opens a blank CustomTkinter window, first commit on a feature branch.
+**Output:** project skeleton, `requirements.txt`, `requirements-dev.txt`, `Main.py` that opens a blank CustomTkinter window, first commit on a feature branch.
 **Read first:** [PRD](../PRD.md) sections 12 (architecture) and 14 (conventions).
 
 ---
@@ -38,26 +38,21 @@
 3. Run `pip install -r requirements-dev.txt`.
 4. Verify: `python -c "import customtkinter; print(customtkinter.__version__)"` prints a version.
 
-### 0.5 Create the folder skeleton
-Create these folders and empty `__init__.py` files (empty means zero bytes, no comments):
+### 0.5 Create the project skeleton
+The whole app lives in one file, `Main.py`, in the repo root. Tests go in a `tests/` folder with an empty `tests/__init__.py` (empty means zero bytes, no comments).
+
+Later phases add their code to `Main.py` as sections, each starting with a plain `# Section` comment, in this order:
 
 ```
-core/__init__.py
-ui/__init__.py
-ui/screens/__init__.py
-ui/widgets/__init__.py
-tests/__init__.py
-```
-
-Also create empty placeholder modules so imports resolve later (leave them empty for now):
-
-```
-core/models.py
-core/validation.py
-core/calculator.py
-core/visualizer.py
-ui/theme.py
-ui/app.py
+Models
+Validation
+Calculator
+Narrative
+Visualizer
+Theme
+Widgets
+Screens
+App
 ```
 
 ### 0.6 Add pytest configuration
@@ -70,10 +65,20 @@ ui/app.py
 2. Run `pytest`. Expected: "no tests ran" and exit without import errors.
 
 ### 0.7 Create the entry point
-Create `main.py`:
+Create `Main.py` with a minimal App section and the entry point so the window opens:
 
 ```python
-from ui.app import FlowApp
+import customtkinter as ctk
+
+
+# App
+
+class FlowApp(ctk.CTk):
+    def __init__(self) -> None:
+        super().__init__()
+        self.title("FLOW | Traffic Signal Timing Optimizer")
+        self.geometry("1120x720")
+        self.minsize(960, 640)
 
 
 def main() -> None:
@@ -85,26 +90,12 @@ if __name__ == "__main__":
     main()
 ```
 
-Create a minimal `ui/app.py` so the window opens:
-
-```python
-import customtkinter as ctk
-
-
-class FlowApp(ctk.CTk):
-    def __init__(self) -> None:
-        super().__init__()
-        self.title("FLOW | Traffic Signal Timing Optimizer")
-        self.geometry("1120x720")
-        self.minsize(960, 640)
-```
-
 ### 0.8 Smoke test
-1. Run `python main.py`. A blank window titled "FLOW | Traffic Signal Timing Optimizer" must open at 1120 x 720 and must not shrink below 960 x 640.
+1. Run `python Main.py`. A blank window titled "FLOW | Traffic Signal Timing Optimizer" must open at 1120 x 720 and must not shrink below 960 x 640.
 2. Close the window. The process must exit cleanly with no traceback.
 
 ### 0.9 Record the conventions
-1. Create `CONTRIBUTING.md` (short, about 15 lines) copying the rules from PRD section 14: single-line `#` comments, no decorative comments, no multi-line string comments, `core/` has no GUI imports, type hints in `core/`, one screen or widget per file.
+1. Create `CONTRIBUTING.md` (short, about 15 lines) copying the rules from PRD section 14: single-line `#` comments, no decorative comments, no multi-line string comments, the logic sections of `Main.py` have no GUI imports, type hints in the logic sections, one class per screen or widget.
 2. Add a short "Conventions" check to your own review routine: before every commit, search the diff for `"""` and for `# ====` or `# ----`; remove any that are not required.
 
 ### 0.10 Commit and merge
@@ -119,9 +110,9 @@ class FlowApp(ctk.CTk):
 - [x] `python --version` is 3.11 or higher
 - [x] `.venv` created and ignored by git
 - [x] `requirements.txt` and `requirements-dev.txt` exist and install cleanly
-- [x] Folder skeleton matches PRD section 12
+- [x] Project layout matches PRD section 12
 - [x] `pytest` runs without errors (no tests yet)
-- [x] `python main.py` opens the blank window and closes cleanly
+- [x] `python Main.py` opens the blank window and closes cleanly
 - [x] `CONTRIBUTING.md` written
 - [x] Phase committed and merged
 
