@@ -93,7 +93,7 @@ Check your Python version with `python --version`.
 4. Start the app:
 
    ```bash
-   python main.py
+   python Main.py
    ```
 
 The FLOW window opens on the model selection screen. See [How to use](#how-to-use) for the steps from there.
@@ -148,20 +148,26 @@ Light theme:
 ## Project structure
 
 ```
-main.py                 app entry point
-core/                   pure calculation logic, no GUI imports
-  models.py             phase model definitions and result dataclasses
-  validation.py         input parsing and validation
-  calculator.py         Webster's method
-  narrative.py          summary, description, results and discussion text
-  visualizer.py         timeline data and copied report
-ui/                     CustomTkinter interface
-  theme.py              colors, fonts, spacing
-  app.py                main window and screen switching
-  screens/              model select, input form, results
-  widgets/              reusable components
-docs/                   PRD and phase task files
+Main.py                 the whole app in one file
+assets/                 window icon
+docs/                   PRD, algorithm, QA record and phase task files
 ```
+
+`Main.py` is split into sections, each starting with a `# Section` comment, in this order:
+
+```
+Models                  phase model definitions and result dataclasses
+Validation              input parsing and validation
+Calculator              Webster's method
+Narrative               summary, description, results and discussion text
+Visualizer              timeline data and copied report
+Theme                   colors, fonts, spacing
+Widgets                 reusable components (Card, Banner, LabeledEntry, ...)
+Screens                 model select, input form, results
+App                     main window and screen switching
+```
+
+The first five sections are the calculation logic and the rest is the CustomTkinter interface. The older multi-file layout (`core/` and `ui/` packages) is kept on the `backup/multi-file` branch.
 
 ## Documentation
 
@@ -181,8 +187,8 @@ docs/                   PRD and phase task files
 
 - Single-line `#` comments only, and only where the code is not obvious
 - No decorative comments, no commented-out code, no multi-line string comments
-- `core/` never imports `ui/`, `tkinter` or `customtkinter`
-- Type hints on every function in `core/`
+- The logic sections (Models to Visualizer) never use `tkinter`, `customtkinter` or anything from the interface sections
+- Type hints on every function in the logic sections
 
 ## Notes on the proposal's sample numbers
 
