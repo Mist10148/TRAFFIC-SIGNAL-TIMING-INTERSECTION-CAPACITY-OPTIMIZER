@@ -326,12 +326,12 @@ END ALGORITHM
 
 ### Where this lives in the code
 
-| Part | File | Function |
+| Part | Section of [Main.py](../Main.py) | Function |
 |---|---|---|
-| Input validation | [core/validation.py](../core/validation.py) | `validate_inputs` |
-| Webster's method (Steps 1 to 8) | [core/calculator.py](../core/calculator.py) | `compute_timing` |
-| Green allocation | [core/calculator.py](../core/calculator.py) | `apportion_greens` |
-| Cycle rounding | [core/calculator.py](../core/calculator.py) | `round_cycle` |
-| Warnings | [core/calculator.py](../core/calculator.py) | `_build_warnings` |
-| Phase timeline | [core/visualizer.py](../core/visualizer.py) | `build_timeline` |
-| Screen flow | [ui/app.py](../ui/app.py), [ui/screens/input_form.py](../ui/screens/input_form.py) | `FlowApp.show`, `InputFormScreen._calculate` |
+| Input validation | Validation | `validate_inputs` |
+| Webster's method (Steps 1 to 8) | Calculator | `compute_timing` |
+| Green allocation | Calculator | `apportion_greens` |
+| Cycle rounding | Calculator | `round_cycle` |
+| Warnings | Calculator | `_build_warnings` |
+| Phase timeline | Visualizer | `build_timeline` |
+| Screen flow | App, Screens: InputFormScreen | `FlowApp.show`, `InputFormScreen._calculate` |
