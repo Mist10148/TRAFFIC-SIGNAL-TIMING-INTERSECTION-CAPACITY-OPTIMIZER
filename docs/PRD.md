@@ -31,7 +31,7 @@ The earlier prototype was a console script. This version is a polished, app-like
 2. A sleek, modern, app-like interface (dark and light themes).
 3. Friendly input handling with a visible retry loop: bad input never crashes the app and never loses what the user already typed.
 4. Clear results: cycle, effective green, per-phase greens, and a readable timeline.
-5. Clean, readable code: a pure `core/` package and a thin `ui/` package.
+5. Clean, readable code in a single `Main.py`: pure logic sections first, then a thin interface on top.
 
 ### Non-goals (v1)
 - Actuated or adaptive signal control.
@@ -135,7 +135,7 @@ A phase whose volume is `0` is **inactive**. Inactive phases are dropped from th
 |---|---|
 | NFR-01 | Python 3.11+, only third-party dependency at runtime is `customtkinter`. |
 | NFR-02 | A calculation completes in under 50 ms; the UI never freezes. |
-| NFR-03 | `core/` has no import of `tkinter` or `customtkinter`. |
+| NFR-03 | The logic sections of `Main.py` (Models to Visualizer) do not use `tkinter` or `customtkinter`. |
 | NFR-04 | Minimum window 960 x 640, default 1120 x 720; layout adapts when resized. |
 | NFR-05 | Text contrast meets WCAG AA in both themes. Signal colors are never the only carrier of meaning (G, Y/R, R letters are always printed). |
 | NFR-07 | Runs on Windows 10/11; builds to a single `.exe` with PyInstaller. |
@@ -162,10 +162,10 @@ The original proposal flowchart has no loop. The retry loops above are the requi
 
 ### 10.1 Look and feel
 - Framework: CustomTkinter, single window, left sidebar plus content area, card-based layout, rounded corners (12 px cards, 8 px inputs).
-- Light and dark themes (follows the system). Tokens live in one place (`ui/theme.py`).
+- Light and dark themes (follows the system). Tokens live in one place (the Theme section of `Main.py`).
 - Typography: a clean sans-serif UI font (Segoe UI Variable / Segoe UI fallback) and a monospace font (Cascadia Mono / Consolas fallback) for the formulas and numeric readouts.
 
-Color tokens, fonts and spacing live in `ui/theme.py`: a warm, Claude-inspired palette with a clay accent.
+Color tokens, fonts and spacing live in the Theme section of `Main.py`: a warm, Claude-inspired palette with a clay accent.
 
 ### 10.2 Screens
 1. **Model Select**: five cards (2, 3, 4, 6, 8 phase), each with a name, a one-line description and a tiny phase diagram icon drawn on a canvas.
@@ -173,7 +173,7 @@ Color tokens, fonts and spacing live in `ui/theme.py`: a warm, Claude-inspired p
 3. **Results**: four stat cards (Cycle `C`, Effective Green `Te`, Total Flow Ratio `Y`, Total Lost Time `L`), a per-phase table (phase, volume, `Yi`, green, share of `Te`), the graphical timeline, four written cards (Summary, Description, Results, Discussion), the formulas used, buttons "Copy results", "Edit inputs", "New calculation".
 4. **Oversaturation state**: an error banner on the Input Form with the actual `Y`, a short explanation and the top contributing phases.
 
-### 10.3 Components (`ui/widgets/`)
+### 10.3 Components (Widgets section of `Main.py`)
 `StatCard`, `LabeledEntry` (label, unit, hint, inline error), `Banner` (info, warning, error), `PhaseTable`, `TimelineCanvas`, `YMeter`, `ModelCard`.
 
 ## 11. Reference cases (recomputed)
@@ -195,27 +195,24 @@ Expected timeline for case 1: NS green 39 s, Y/R 4 s, red 32 s; EW red 43 s, gre
 
 ## 12. Architecture
 
+Everything is in one file, `Main.py`, split into sections in this order:
+
 ```
-main.py                      entry point, launches FlowApp
-core/
-  models.py                  PhaseDef, PhaseModel, MODELS registry, TimingInput, PhaseResult, TimingResult
-  validation.py              parse_number, validate_inputs -> list[FieldError]
-  calculator.py              flow_ratio, total_lost_time, webster_cycle, round_cycle, apportion_greens, compute_timing
-  narrative.py               build_narrative -> Summary / Description / Results / Discussion text
-  visualizer.py              build_timeline -> list[TimelineRow], render_report -> str
-ui/
-  theme.py                   color tokens, fonts, spacing, apply_theme
-  app.py                     FlowApp (CTk), screen switching, shared state
-  screens/
-    model_select.py          ModelSelectScreen
-    input_form.py            InputFormScreen
-    results.py               ResultsScreen
-  widgets/                   StatCard, LabeledEntry, Banner, PhaseTable, TimelineCanvas, YMeter, ModelCard
-docs/
-  PRD.md  phases/PHASE-*.md
+Models                       PhaseDef, PhaseModel, MODELS registry, TimingInput, PhaseResult, TimingResult
+Validation                   parse_number, validate_inputs -> list[FieldError]
+Calculator                   flow_ratio, total_lost_time, webster_cycle, round_cycle, apportion_greens, compute_timing
+Narrative                    build_narrative -> Summary / Description / Results / Discussion text
+Visualizer                   build_timeline -> Timeline, render_report -> str
+Theme                        color tokens, fonts, spacing
+Widgets                      Card, Banner, LabeledEntry, YMeter, ModelCard, StatCard, PhaseTable, TimelineCanvas
+Screens                      ModelSelectScreen, InputFormScreen, ResultsScreen
+App                          FlowApp (CTk), screen switching, shared state
+main()                       entry point, launches FlowApp
 ```
 
-Data flow: `InputFormScreen` collects strings -> `validation.validate_inputs` -> `calculator.compute_timing` -> `TimingResult` -> `ResultsScreen`, which calls `visualizer.build_timeline` / `narrative.build_narrative`. `core/` only exchanges plain dataclasses and strings.
+Other folders: `assets/` (window icon) and `docs/` (PRD, algorithm, QA record, phase task files).
+
+Data flow: `InputFormScreen` collects strings -> `validate_inputs` -> `compute_timing` -> `TimingResult` -> `ResultsScreen`, which calls `build_timeline` / `build_narrative`. The logic sections only exchange plain dataclasses and strings.
 
 ## 13. Stretch goals (only after all phases are done)
 - Lanes-per-phase input (`Si = S x lanes`).
@@ -229,9 +226,9 @@ Data flow: `InputFormScreen` collects strings -> `validation.validate_inputs` ->
 - No multi-line string comments. Triple-quoted strings only where truly required (for example a multi-line text template that is real output).
 - Short docstring is not needed; use clear names instead.
 - `snake_case` for functions and variables, `PascalCase` for classes, `UPPER_CASE` for constants.
-- Type hints on every function signature in `core/`.
-- One screen or widget per file. No logic in `main.py` beyond starting the app.
-- `core/` never imports from `ui/`.
+- Type hints on every function signature in the logic sections.
+- One class per screen or widget, grouped by section in `Main.py`. No logic in `main()` beyond starting the app.
+- The logic sections never use anything from the interface sections.
 
 ## 15. Risks and mitigations
 
