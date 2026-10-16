@@ -2,10 +2,10 @@
 
 **Goal:** a pure-Python Webster's method engine with validation, fully unit tested, with zero GUI code.
 **Prerequisites:** Phase 0 complete.
-**Output:** `core/models.py`, `core/validation.py`, `core/calculator.py`, `tests/test_calculator.py`, `tests/test_validation.py`.
+**Output:** the Models, Validation and Calculator sections of `Main.py`, `tests/test_calculator.py`, `tests/test_validation.py`.
 **Read first:** [PRD](../PRD.md) sections 4 (formulas), 5 (models), 6 (decisions D1 to D7), 11 (test cases).
 
-Rule for this phase: nothing in `core/` may import `tkinter`, `customtkinter` or anything from `ui/`.
+Rule for this phase: nothing in the logic sections of `Main.py` may use `tkinter`, `customtkinter` or anything from the interface sections.
 
 ---
 
@@ -14,7 +14,7 @@ Rule for this phase: nothing in `core/` may import `tkinter`, `customtkinter` or
 ### 1.1 Branch
 `git checkout -b phase-1-calculation-engine`
 
-### 1.2 Define the data models (`core/models.py`)
+### 1.2 Define the data models (`Main.py`, Models section)
 1. Add constants at the top:
    ```python
    MAX_SATURATION_FLOW = 2400
@@ -51,7 +51,7 @@ Rule for this phase: nothing in `core/` may import `tkinter`, `customtkinter` or
    - `warnings: list[str]`
    - `message: str` (empty unless oversaturated)
 
-### 1.3 Pure formula functions (`core/calculator.py`)
+### 1.3 Pure formula functions (`Main.py`, Calculator section)
 Write each as a small function with type hints and no side effects.
 
 1. `flow_ratio(volume: float, saturation_flow: float) -> float` returns `volume / saturation_flow`.
@@ -66,7 +66,7 @@ Write each as a small function with type hints and no side effects.
    5. Sort indexes by `exact[i] - greens[i]` descending; add 1 to the first `leftover` indexes. Break ties by lower index first.
    6. Return `greens`. Invariant: `sum(greens) == effective_green`.
 
-### 1.4 The orchestrator (`core/calculator.py`)
+### 1.4 The orchestrator (`Main.py`, Calculator section)
 Write `compute_timing(data: TimingInput) -> TimingResult`:
 1. Look up `model = MODELS[data.model_key]`.
 2. Build the active list: phases from `model.phases` where `data.volumes[code] > 0`, keeping model order.
@@ -80,7 +80,7 @@ Write `compute_timing(data: TimingInput) -> TimingResult`:
    - any `green < MIN_GREEN_WARNING`: `"Phase {code} has only {green} s of green, below the {MIN_GREEN_WARNING} s minimum."`
 8. Return the result. `compute_timing` must never raise for validated input.
 
-### 1.5 Validation (`core/validation.py`)
+### 1.5 Validation (`Main.py`, Validation section)
 1. Dataclass `FieldError`: `field: str` (`"saturation_flow"`, `"lost_time"` or a phase code), `message: str`.
 2. `parse_number(text: str) -> float | None`: strip whitespace; accept `.` decimals; also accept a single `,` as decimal separator by replacing it with `.`; return `None` for empty or non-numeric; reject `nan` and `inf`.
 3. `validate_inputs(model_key: str, raw: dict[str, str]) -> tuple[TimingInput | None, list[FieldError]]`:
@@ -114,10 +114,10 @@ Write pytest tests with `pytest.approx` for floats:
 5. Several bad fields at once return several `FieldError`s.
 
 ### 1.8 Verify
-1. `pytest --cov=core --cov-report=term-missing`
-2. Coverage of `core/calculator.py` and `core/validation.py` must be 95 percent or more.
-3. Run `python -c "from core.calculator import compute_timing"`; it must import without side effects.
-4. Search `core/` for `tkinter` or `customtkinter`: no matches.
+1. `pytest --cov=Main --cov-report=term-missing`
+2. Coverage of the Calculator and Validation sections of `Main.py` must be 95 percent or more.
+3. Run `python -c "from Main import compute_timing"`; it must import without side effects (no window opens).
+4. Search the logic sections of `Main.py` for `tkinter` or `customtkinter`: no matches.
 
 ### 1.9 Commit and merge
 `git commit -m "Phase 1: Webster calculation engine and input validation"`, then merge into `main`.
@@ -132,7 +132,7 @@ Write pytest tests with `pytest.approx` for floats:
 - [x] Validation collects all errors in one pass
 - [x] All six acceptance cases pass
 - [x] Coverage 95 percent or more on both modules
-- [x] No GUI imports in `core/`
+- [x] No GUI use in the logic sections
 - [x] Comments are single-line only, no docstring blocks
 
 ## Definition of done

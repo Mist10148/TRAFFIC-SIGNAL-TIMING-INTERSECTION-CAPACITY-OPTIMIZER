@@ -24,7 +24,7 @@
 From the repo root with the virtual environment active (replace `<CTK_PATH>` with the printed path):
 
 ```bash
-pyinstaller --noconfirm --onefile --windowed --name FLOW --icon assets/flow.ico --add-data "<CTK_PATH>;customtkinter/" main.py
+pyinstaller --noconfirm --onefile --windowed --name FLOW --icon assets/flow.ico --add-data "<CTK_PATH>;customtkinter/" Main.py
 ```
 
 Notes:

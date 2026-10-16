@@ -13,8 +13,8 @@
 `git checkout -b phase-6-testing-and-polish`
 
 ### 6.2 Automated test audit
-1. Run `pytest --cov=core --cov-report=term-missing`.
-2. Required: overall `core/` coverage of 90 percent or more (NFR-06). For every uncovered line listed, either add a test or delete dead code.
+1. Run `pytest --cov=Main --cov-report=term-missing`.
+2. Required: coverage of 90 percent or more on the logic sections of `Main.py` (NFR-06). For every uncovered line listed, either add a test or delete dead code.
 3. Confirm test files exist: `test_calculator.py`, `test_validation.py`, `test_visualizer.py`.
 
 ### 6.3 Add an end-to-end engine test (`tests/test_pipeline.py`)
@@ -79,9 +79,9 @@ Work through this list and tick each item:
 ### 6.9 Code hygiene check
 1. Search the repo for `"""`: remove any that are not required output text.
 2. Search for `# ===`, `# ---`, and commented-out code: remove.
-3. Search `core/` for `tkinter` and `customtkinter`: none.
-4. Search `ui/` for hex colors (`#[0-9A-Fa-f]{6}`) outside `theme.py`: none.
-5. Run `python -m compileall core ui` to catch syntax issues.
+3. Search the logic sections of `Main.py` for `tkinter` and `customtkinter`: none.
+4. Search the interface sections for hex colors (`#[0-9A-Fa-f]{6}`) outside the Theme section: none.
+5. Run `python -m py_compile Main.py` to catch syntax issues.
 6. Remove unused imports and unused variables.
 
 ### 6.10 Screenshots for the README
@@ -90,8 +90,8 @@ Work through this list and tick each item:
 3. Add a "Screenshots" section to the README with these images.
 
 ### 6.11 Fix, retest, commit
-1. Fix every failure found; for each bug, add a regression test when it is in `core/`.
-2. Re-run `pytest --cov=core` and re-run the QA table.
+1. Fix every failure found; for each bug, add a regression test when it is in the logic sections.
+2. Re-run `pytest --cov=Main` and re-run the QA table.
 3. `git commit -m "Phase 6: tests, QA pass and UI polish"`, merge into `main`.
 
 ---
@@ -99,7 +99,7 @@ Work through this list and tick each item:
 ## Checklist
 Note: the automated tests were removed from this project at the owner's request, so 6.2 to 6.4 and the coverage and test items below were skipped. The edge cases and QA were checked with throwaway scripts instead; see [QA.md](../QA.md), which also lists what has not been run yet.
 
-- [ ] `core/` coverage is 90 percent or more
+- [ ] Logic section coverage is 90 percent or more
 - [ ] Pipeline and invariant tests pass
 - [ ] Edge-case matrix passes in tests and by hand
 - [x] `docs/QA.md` filled with results

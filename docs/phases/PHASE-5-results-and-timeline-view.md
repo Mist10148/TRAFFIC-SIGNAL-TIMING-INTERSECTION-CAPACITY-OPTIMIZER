@@ -2,7 +2,7 @@
 
 **Goal:** the Results screen: summary cards, per-phase table, graphical timeline, written sections, copy-to-clipboard and navigation back into the loop.
 **Prerequisites:** Phase 2 (visualizer), Phase 4 (the input form produces `app.result`).
-**Output:** `ui/widgets/stat_card.py`, `ui/widgets/phase_table.py`, `ui/widgets/timeline_canvas.py`, `ui/screens/results.py`.
+**Output:** `StatCard`, `PhaseTable`, `TimelineCanvas` and `ResultsScreen` in `Main.py`.
 **Read first:** [PRD](../PRD.md) sections 7 (FR-09 to FR-12, FR-15) and 10.2.
 
 ---
@@ -12,19 +12,19 @@
 ### 5.1 Branch
 `git checkout -b phase-5-results-and-timeline-view`
 
-### 5.2 `StatCard` (`ui/widgets/stat_card.py`)
+### 5.2 `StatCard` (`Main.py`, Widgets section)
 1. A `surface` card with a small muted caption (11 pt, uppercase), a large value (32 pt bold, mono), and a unit/subtitle line (12 pt, muted).
 2. `StatCard(parent, caption, value, subtitle, accent=None)`; optional `accent` colors the value and draws a 3 px top bar.
 3. `update(value, subtitle)` for reuse.
 
-### 5.3 `PhaseTable` (`ui/widgets/phase_table.py`)
+### 5.3 `PhaseTable` (`Main.py`, Widgets section)
 1. Build from `CTkLabel`s in a grid (CustomTkinter has no table), with a header row in `surface_alt`.
 2. Columns: Phase (code plus label), Volume (veh/hr), Flow ratio `Yi` (4 decimals), Green (s), Share of `Te` (percent, 1 decimal).
 3. A footer row: totals (volume sum, `Y`, sum of greens `= Te`, 100.0 percent).
 4. Numbers are right-aligned in the mono font; rows alternate `surface` and `surface_alt` at low contrast.
 5. A small colored dot before each phase code uses a fixed 8-color cycle derived from the signal tokens plus the accent so rows match the legend elsewhere.
 
-### 5.4 `TimelineCanvas` (`ui/widgets/timeline_canvas.py`)
+### 5.4 `TimelineCanvas` (`Main.py`, Widgets section)
 1. Wraps a `tk.Canvas` (borderless, background `surface`). Colors come from `theme.color(...)` resolved for the current appearance mode; on appearance change, redraw.
 2. `draw(timeline: Timeline)`:
    1. Row height 34, row gap 10, label column 90 px on the left (phase code, mono 12 pt), plot area from x = 100 to canvas width minus 16.
@@ -36,7 +36,7 @@
 4. Hover tooltip: a small floating label with `{code}: {kind name} {duration}s (t = {start} to {end}s)`, built from `<Motion>` and a hit-test over the scaled segments.
 5. Legend row above the canvas: green square "Green", amber square "Yellow / All-Red", red square "Red".
 
-### 5.5 `ResultsScreen` layout (`ui/screens/results.py`)
+### 5.5 `ResultsScreen` layout (`Main.py`, Screens section)
 Top to bottom inside one scrollable frame:
 1. Header: breadcrumb "Model / Inputs / Results", title "{model.name} results", subtitle "Saturation flow {S} veh/hr/lane, lost time {li} s per phase".
 2. Warnings: a `warning` Banner for each entry in `result.warnings` (hidden when empty).
@@ -48,7 +48,7 @@ Top to bottom inside one scrollable frame:
 4. Card "Phase green times": `PhaseTable`.
 5. Card "Phase timeline": legend, `TimelineCanvas`.
 6. Four cards "Summary", "Description", "Results" and "Discussion": wrapped labels filled from `narrative.build_narrative(result, saturation_flow, lost_time)`. The wrap width follows the window width.
-7. Card "Formulas used": a compact list showing each formula with the substituted numbers, for example `Co = (1.5 x 8 + 5) / (1 - 0.7632) = 71.78 s`, `Te = 75 - 8 = 67 s`, `g(NS) = (0.4474 / 0.7632) x 67 = 39.28 -> 39 s`. Build these strings in a small helper `formula_lines(result, lost_time)` inside `ui/screens/results.py`. This helps students check the hand calculation.
+7. Card "Formulas used": a compact list showing each formula with the substituted numbers, for example `Co = (1.5 x 8 + 5) / (1 - 0.7632) = 71.78 s`, `Te = 75 - 8 = 67 s`, `g(NS) = (0.4474 / 0.7632) x 67 = 39.28 -> 39 s`. Build these strings in a small helper `formula_lines(result, lost_time)` next to `ResultsScreen` in `Main.py`. This helps students check the hand calculation.
 8. Action bar (sticky bottom or at the end): "Copy results" (primary), "Edit inputs" (secondary), "New calculation" (text).
 
 ### 5.6 Behaviors

@@ -2,7 +2,7 @@
 
 **Goal:** a complete Input Form: global inputs, dynamic per-model volume fields, live feedback, inline validation and the retry loops (invalid input, oversaturation).
 **Prerequisites:** Phase 1 (validation and calculator), Phase 3 (shell and `Banner`).
-**Output:** `ui/widgets/labeled_entry.py`, `ui/widgets/y_meter.py`, `ui/screens/input_form.py`, wiring in `ui/app.py`.
+**Output:** `LabeledEntry`, `YMeter` and `InputFormScreen` in `Main.py`, wiring in the App section.
 **Read first:** [PRD](../PRD.md) sections 5, 7 (FR-02 to FR-08, FR-12, FR-14, FR-15) and 9 (user flow).
 
 ---
@@ -12,7 +12,7 @@
 ### 4.1 Branch
 `git checkout -b phase-4-input-screens-and-validation`
 
-### 4.2 `LabeledEntry` widget (`ui/widgets/labeled_entry.py`)
+### 4.2 `LabeledEntry` widget (`Main.py`, Widgets section)
 1. Layout (vertical): label row (label text left, muted unit right), `CTkEntry` (height 38, radius 8), hint or error line below (11 pt).
 2. Constructor: `LabeledEntry(parent, label, unit, hint, placeholder="0")`.
 3. Methods:
@@ -24,13 +24,13 @@
 4. On focus-in, select all text. On focus-out, if the text parses as a number, normalize it (strip spaces, `850.0` stays as typed, no auto-reformatting beyond trimming).
 5. Typing a character that can never be part of a number (anything other than digits, one `.` or `,`, and a leading `-`) is flagged immediately with `"Numbers only"` but still allowed to be typed, so the user sees why Calculate will fail.
 
-### 4.3 `YMeter` widget (`ui/widgets/y_meter.py`)
+### 4.3 `YMeter` widget (`Main.py`, Widgets section)
 1. A horizontal bar, height 14, radius 7, track in `surface_alt`.
 2. `set(value: float)` fills the bar from 0 to 1.0 (clamp the fill at 1.0). Color by value: below 0.70 `signal_green`, 0.70 to 0.85 `signal_amber`, 0.85 up to 1.0 amber-to-red tint (use `signal_red` at 0.95 and above), 1.0 or more `signal_red`.
 3. Caption left: `Y = 0.7632`; caption right: `Capacity 100 percent` marker at the end. Add a small tick at 0.85 labeled "heavy".
 4. `set_error()` shows `Y = --` with an empty bar when the inputs are not yet valid.
 
-### 4.4 `InputFormScreen` layout (`ui/screens/input_form.py`)
+### 4.4 `InputFormScreen` layout (`Main.py`, Screens section)
 1. Header: breadcrumb "Model / Inputs", title "{model.name} inputs", a "Change model" text button that calls `app.show("model")`.
 2. Body is a scrollable frame with two cards side by side (stacked below 1000 px width):
    - **Card A, "Intersection parameters":** `LabeledEntry` for Saturation Flow Rate (unit `veh/hr/lane`, hint `Typical 1800 to 1900`, default placeholder `1900`) and Lost Time per Phase (unit `s`, hint `Amber + all-red, whole seconds`, placeholder `4`).
@@ -76,7 +76,7 @@ Implement `on_calculate()`:
    - 4-phase: `200`, `700`, `150`, `600`
    - 6-phase: `NBL 250`, `SBL 0`, `ArtThru 900`, `MinEB 500`, `MinWB 0`
    - 8-phase: `NBL 150`, `SBT 600`, `EBL 150`, `WBT 500`, all others `0`
-   Keep these example dicts in `ui/screens/input_form.py` as `EXAMPLES` (UI convenience, not part of `core/`).
+   Keep these example dicts next to `InputFormScreen` as `EXAMPLES` (UI convenience, not part of the logic sections).
 
 ### 4.9 Sidebar and navigation rules
 1. The "Inputs" sidebar button is enabled once a model is chosen.
@@ -108,7 +108,7 @@ Implement `on_calculate()`:
 - [ ] Enter key submits; Tab order is sensible
 - [x] Fill example, Reset and Change model work
 - [ ] All items in 4.10 pass
-- [x] Single-line comments only; no color hex outside `theme.py`
+- [x] Single-line comments only; no color hex outside the Theme section
 
 ## Definition of done
 A user can enter data for any model, see precise errors, correct them and reach the results screen without the app ever crashing or discarding their input.

@@ -1,8 +1,8 @@
 # Phase 2: Visualization Engine
 
-**Goal:** turn a `TimingResult` into timeline data (for the GUI canvas) and a text diagram (for the monospace view and clipboard), all in `core/`.
+**Goal:** turn a `TimingResult` into timeline data (for the GUI canvas) and a text diagram (for the monospace view and clipboard), all in the logic sections of `Main.py`.
 **Prerequisites:** Phase 1 complete.
-**Output:** `core/visualizer.py`, `tests/test_visualizer.py`.
+**Output:** the Visualizer section of `Main.py`, `tests/test_visualizer.py`.
 **Read first:** [PRD](../PRD.md) section 11 (expected timeline) and the example output below.
 
 ---
@@ -35,7 +35,7 @@ EW        : [----- R (43s) -----][=== G (28s) ===][Y/R: 4s]
 ### 2.1 Branch
 `git checkout -b phase-2-visualization-engine`
 
-### 2.2 Data structures (`core/visualizer.py`)
+### 2.2 Data structures (`Main.py`, Visualizer section)
 1. `Segment` frozen dataclass: `kind: str` (`"R"`, `"G"` or `"YR"`), `start: int`, `duration: int` (seconds from cycle start).
 2. `TimelineRow` frozen dataclass: `code: str`, `label: str`, `segments: tuple[Segment, ...]`.
 3. `Timeline` frozen dataclass: `cycle: int`, `lost_time_per_phase: int`, `rows: tuple[TimelineRow, ...]`.
@@ -82,7 +82,7 @@ Add `scale_segments(row: TimelineRow, pixel_width: int, cycle: int) -> list[tupl
 7. `render_report` contains the sections in the right order and the line `Cycle Length: 75 s` for case 1.
 
 ### 2.8 Verify
-1. `pytest --cov=core`; coverage on `core/visualizer.py` must be 95 percent or more.
+1. `pytest --cov=Main`; coverage on the Visualizer section must be 95 percent or more.
 2. Manually print case 1 through 5 from a scratch script (kept outside the repo) and compare with the PRD.
 
 ### 2.9 Commit and merge
@@ -96,7 +96,7 @@ Add `scale_segments(row: TimelineRow, pixel_width: int, cycle: int) -> list[tupl
 - [x] `build_timeline` rejects oversaturated results
 - [x] Pixel scaling has no gaps or overlaps
 - [x] `render_report` sections complete and ordered
-- [x] Coverage 95 percent or more on `visualizer.py`
+- [x] Coverage 95 percent or more on the Visualizer section
 - [x] No GUI imports, single-line comments only
 
 ## Definition of done
